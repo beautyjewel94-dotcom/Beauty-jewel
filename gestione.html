@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beauty Jewel – by Katia Carrera</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#3ab5c6; --teal-light:#e0f6f9; --teal-dark:#1e8a9a;
+  --blue:#4a7fd4; --blue-light:#e8f0fc;
+  --cream:#f4fbfc; --dark:#0d2b35; --mid:#3a6472; --border:#b8e4ec;
+  --white:#fff; --shadow:0 4px 24px rgba(13,43,53,.10);
+  --grad:linear-gradient(135deg,#3ab5c6 0%,#4a7fd4 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Nunito',sans-serif;
+  color:var(--dark);
+  min-height:100vh;
+  background-color: #e8f8fb;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(58,181,198,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(74,127,212,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 60% 80%, rgba(58,181,198,0.08) 0%, transparent 50%);
+  position:relative;
+}
+body::before {
+  content: 'JL';
+  position: fixed;
+  bottom: -60px;
+  right: -40px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 380px;
+  font-weight: 600;
+  color: rgba(58,181,198,0.06);
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+  user-select: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(255,255,255,0.6) 1px, transparent 1px),
+    radial-gradient(circle at 45% 15%, rgba(58,181,198,0.3) 1px, transparent 1px),
+    radial-gradient(circle at 75% 35%, rgba(255,255,255,0.5) 1px, transparent 1px),
+    radial-gradient(circle at 25% 65%, rgba(74,127,212,0.2) 1px, transparent 1px),
+    radial-gradient(circle at 85% 70%, rgba(255,255,255,0.4) 1px, transparent 1px),
+    radial-gradient(circle at 55% 85%, rgba(58,181,198,0.25) 1px, transparent 1px),
+    radial-gradient(circle at 35% 90%, rgba(255,255,255,0.3) 1px, transparent 1px),
+    radial-gradient(circle at 90% 10%, rgba(74,127,212,0.2) 1px, transparent 1px),
+    radial-gradient(circle at 10% 85%, rgba(58,181,198,0.15) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 65% 55%, rgba(255,255,255,0.5) 1.5px, transparent 1.5px);
+  background-size: 200px 200px;
+  pointer-events: none;
+  z-index: 0;
+  animation: glitter 6s ease-in-out infinite alternate;
+}
+@keyframes glitter {
+  0%   { opacity: 0.4; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+header, nav, .page, .modal { position: relative; z-index: 1; }
+
+/* HEADER */
+header{background:var(--grad);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(58,181,198,.35);}
+.logo-main{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:#fff;display:block;}
+.logo-sub{font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.85);display:block;}
+.header-date{font-size:.72rem;color:rgba(255,255,255,.85);text-align:right;}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;}
+nav::-webkit-scrollbar{display:none;}
+.nav-btn{flex:1;min-width:72px;padding:12px 6px;border:none;background:transparent;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;color:var(--mid);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.nav-btn.active{color:var(--teal-dark);border-bottom-color:var(--teal);background:var(--teal-light);}
+.nav-btn:hover:not(.active){background:var(--blue-light);}
+
+/* MODE BANNER */
+.mode-banner{display:none;background:var(--grad);color:#fff;text-align:center;padding:10px 16px;font-size:.82rem;font-weight:600;letter-spacing:.04em;}
+.mode-banner.show{display:block;}
+body.cliente-mode .mode-banner{display:block;}
+
+/* PAGES */
+.page{display:none;padding:18px 16px;max-width:700px;margin:0 auto;}
+.page.active{display:block;}
+
+/* SECTION TITLE */
+.section-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--teal-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* CARD */
+.card{background:var(--white);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border);}
+
+/* FORM */
+.form-group{margin-bottom:13px;}
+label{display:block;font-size:.75rem;font-weight:700;color:var(--mid);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+input,select,textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.93rem;color:var(--dark);background:var(--cream);transition:border .2s;outline:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);background:var(--white);}
+textarea{resize:vertical;min-height:65px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .18s;}
+.btn-primary{background:var(--grad);color:#fff;}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);}
+.btn-secondary{background:var(--teal-light);color:var(--mid);border:1.5px solid var(--teal);}
+.btn-secondary:hover{background:var(--teal);color:#fff;}
+.btn-whatsapp{background:#25d366;color:#fff;}
+.btn-whatsapp:hover{background:#1da851;transform:translateY(-1px);}
+.btn-danger{background:#fee2e2;color:#b91c1c;}
+.btn-danger:hover{background:#fca5a5;}
+.btn-warning{background:#fef3c7;color:#92400e;border:1.5px solid #fcd34d;}
+.btn-warning:hover{background:#fcd34d;}
+.btn-sm{padding:6px 12px;font-size:.78rem;border-radius:8px;}
+.btn-full{width:100%;justify-content:center;}
+
+/* APPT CARD */
+.appt-card{background:var(--white);border-radius:14px;padding:14px 15px;margin-bottom:10px;border-left:4px solid var(--teal);box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.appt-card.past{border-left-color:var(--border);opacity:.65;}
+.appt-card.pending{border-left-color:#f59e0b;}
+.appt-info{flex:1;}
+.appt-name{font-weight:700;font-size:.97rem;color:var(--dark);margin-bottom:2px;}
+.appt-service{font-size:.8rem;color:var(--teal-dark);font-weight:700;margin-bottom:3px;}
+.appt-time{font-size:.78rem;color:var(--mid);}
+.appt-duration{font-size:.75rem;color:var(--blue);font-weight:600;}
+.appt-actions{display:flex;flex-direction:column;gap:5px;align-items:flex-end;}
+
+/* CLIENT CARD */
+.client-card{background:var(--white);border-radius:14px;padding:14px 15px;margin-bottom:9px;box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;transition:all .18s;}
+.client-card:hover{border-color:var(--teal);transform:translateY(-1px);}
+.client-name{font-weight:700;font-size:.97rem;color:var(--dark);}
+.client-meta{font-size:.78rem;color:var(--mid);margin-top:3px;}
+.badge{display:inline-block;border-radius:20px;padding:2px 10px;font-size:.72rem;font-weight:700;}
+.badge-teal{background:var(--teal-light);color:var(--teal-dark);}
+.badge-today{background:var(--grad);color:#fff;}
+.badge-pending{background:#fef3c7;color:#92400e;}
+
+/* STORICO */
+.storico-item{padding:9px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:.83rem;}
+.storico-item:last-child{border-bottom:none;}
+
+/* TABS */
+.tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+.tab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:.8rem;cursor:pointer;color:var(--mid);font-family:'Nunito',sans-serif;font-weight:700;transition:all .18s;}
+.tab.active{background:var(--grad);color:#fff;border-color:var(--teal);}
+
+/* EMPTY */
+.empty{text-align:center;padding:36px 20px;color:var(--mid);font-size:.88rem;}
+.empty-icon{font-size:2.8rem;margin-bottom:10px;opacity:.4;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,43,53,.52);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:24px 24px 0 0;padding:22px 18px 30px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;animation:slideUp .26s ease;}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--teal-dark);}
+.close-btn{background:var(--teal-light);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;color:var(--teal-dark);}
+
+/* PROMEMORIA */
+.wa-preview{background:#e7fce7;border-radius:12px;padding:13px 15px;margin:12px 0;font-size:.85rem;color:#1a3d1a;border-left:3px solid #25d366;white-space:pre-wrap;font-family:monospace;line-height:1.5;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px;}
+.stat-card{background:var(--white);border-radius:14px;padding:15px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow);}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--teal);font-weight:600;}
+.stat-label{font-size:.72rem;color:var(--mid);margin-top:2px;font-weight:700;}
+
+/* INFO BOX */
+.info-box{border-radius:12px;padding:13px 15px;margin-bottom:13px;font-size:.83rem;}
+.info-teal{background:var(--teal-light);color:var(--teal-dark);border:1px solid var(--border);}
+.info-yellow{background:#fef9c3;color:#854d0e;border:1px solid #fde047;}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+@media(max-width:420px){.form-row{grid-template-columns:1fr;}}
+.search-box{position:relative;margin-bottom:13px;}
+.search-box input{padding-left:36px;}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:.95rem;color:var(--mid);pointer-events:none;}
+.divider{height:1px;background:var(--border);margin:14px 0;}
+.text-mid{color:var(--mid);font-size:.83rem;}
+.mt-8{margin-top:8px;}
+.flex-between{display:flex;justify-content:space-between;align-items:center;}
+.flex{display:flex;}
+.gap-6{gap:6px;}
+
+/* BLOCCO GIORNO */
+.blocco-card{background:#fff0f0;border-radius:14px;padding:14px 15px;margin-bottom:10px;border-left:4px solid #f87171;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.blocco-label{font-size:.78rem;color:#b91c1c;font-weight:700;margin-bottom:2px;}
+
+/* ORARI GRID */
+.orari-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px;}
+.orario-btn{padding:9px 4px;border-radius:9px;border:1.5px solid var(--border);background:var(--white);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--dark);transition:all .18s;text-align:center;}
+.orario-btn:hover:not(.occupato){background:var(--teal-light);border-color:var(--teal);}
+.orario-btn.selected{background:var(--grad);color:#fff;border-color:var(--teal);}
+.orario-btn.occupato{background:#f3f4f6;color:#9ca3af;cursor:not-allowed;text-decoration:line-through;}
+
+/* EXTRA CHECKBOX */
+.extra-list{display:flex;flex-direction:column;gap:7px;}
+.extra-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);cursor:pointer;transition:all .18s;}
+.extra-item.selected{background:var(--teal-light);border-color:var(--teal);}
+.extra-item input[type=checkbox]{accent-color:var(--teal);width:16px;height:16px;}
+.extra-label{font-size:.87rem;font-weight:600;flex:1;}
+.extra-time{font-size:.75rem;color:var(--blue);font-weight:700;}
+
+/* LOGIN */
+.login-overlay{position:fixed;inset:0;background:var(--grad);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-box{background:var(--white);border-radius:24px;padding:32px 24px;width:100%;max-width:380px;box-shadow:0 8px 40px rgba(13,43,53,.25);text-align:center;}
+.login-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2rem;color:var(--teal-dark);margin-bottom:4px;}
+.login-sub{font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:28px;}
+.login-error{background:#fee2e2;color:#b91c1c;border-radius:10px;padding:10px;font-size:.83rem;margin-bottom:12px;display:none;}
+
+/* SWITCH */
+.switch-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;}
+.switch{position:relative;display:inline-block;width:44px;height:24px;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:24px;transition:.3s;}
+.slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+input:checked+.slider{background:var(--teal);}
+input:checked+.slider:before{transform:translateX(20px);}
+
+/* VISTA TOGGLE */
+.view-toggle{display:flex;gap:0;background:var(--teal-light);border-radius:10px;padding:3px;margin-bottom:14px;}
+.view-toggle-btn{flex:1;padding:7px;border:none;background:transparent;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;color:var(--mid);transition:all .18s;}
+.view-toggle-btn.active{background:var(--white);color:var(--teal-dark);box-shadow:0 2px 8px rgba(13,43,53,.08);}
+
+/* CALENDARIO AGENDA */
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.cal-month-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--teal-dark);}
+.cal-nav-btn{background:var(--teal-light);border:none;border-radius:8px;padding:6px 13px;cursor:pointer;font-size:1rem;color:var(--teal-dark);font-weight:700;}
+.cal-week-names{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;}
+.cal-week-name{text-align:center;font-size:.68rem;font-weight:700;color:var(--mid);padding:3px 0;}
+.cal-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-cell{border-radius:9px;padding:5px 2px;min-height:52px;font-size:.78rem;cursor:pointer;border:1.5px solid transparent;transition:all .15s;position:relative;}
+.cal-cell:hover:not(.cal-empty):not(.cal-past){border-color:var(--teal);background:var(--teal-light);}
+.cal-cell.cal-today{background:var(--teal-light);border-color:var(--teal);}
+.cal-cell.cal-selected{background:var(--grad);color:#fff;border-color:var(--teal);}
+.cal-cell.cal-past{opacity:.45;cursor:default;}
+.cal-cell.cal-empty{cursor:default;}
+.cal-cell.cal-chiuso{background:#f8f8f8;}
+.cal-day-num{font-weight:700;font-size:.82rem;text-align:center;margin-bottom:3px;}
+.cal-cell.cal-selected .cal-day-num{color:#fff;}
+.cal-cell.cal-today .cal-day-num{color:var(--teal-dark);}
+.cal-dots{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;}
+.cal-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);}
+.cal-cell.cal-selected .cal-dot{background:#fff;}
+.cal-dot-extra{background:var(--blue);}
+.cal-day-detail{margin-top:10px;}
+.cal-day-detail-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--teal-dark);margin-bottom:8px;}
+
+/* TIME GRID */
+.time-grid { display: flex; flex-direction: column; gap: 0; }
+.time-row { display: flex; align-items: stretch; min-height: 56px; border-bottom: 1px solid var(--border); position: relative; }
+.time-row:last-child { border-bottom: none; }
+.time-label { width: 52px; min-width: 52px; font-size: .72rem; font-weight: 700; color: var(--mid); padding: 6px 8px 0 0; text-align: right; flex-shrink: 0; }
+.time-slot { flex: 1; padding: 4px 6px; cursor: pointer; transition: background .15s; position: relative; border-radius: 0 8px 8px 0; }
+.time-slot:hover { background: var(--teal-light); }
+.time-slot.has-appt { cursor: default; }
+.time-slot.has-appt:hover { background: transparent; }
+.time-appt-block { background: var(--grad); color: #fff; border-radius: 8px; padding: 6px 10px; margin: 2px 0; }
+.time-appt-block .appt-name { font-weight: 700; font-size: .82rem; }
+.time-appt-block .appt-info { font-size: .73rem; opacity: .9; }
+.time-appt-actions { display: flex; gap: 4px; margin-top: 4px; }
+.time-appt-actions button { padding: 2px 8px; font-size: .7rem; border-radius: 6px; border: none; cursor: pointer; font-weight: 700; }
+.time-blocco-block { background: #fff0f0; border-left: 3px solid #f87171; border-radius: 0 8px 8px 0; padding: 6px 10px; margin: 2px 0; font-size: .78rem; color: #b91c1c; font-weight: 700; }
+.time-add-hint { font-size: .7rem; color: var(--teal); opacity: 0; transition: opacity .2s; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); }
+.time-slot:hover .time-add-hint { opacity: 1; }
+
+/* GRIGLIA ORARIA GIORNO */
+.time-grid { display: flex; flex-direction: column; gap: 0; }
+.time-slot {
+  display: flex;
+  align-items: stretch;
+  min-height: 54px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.time-slot:last-child { border-bottom: none; }
+.time-label {
+  width: 52px;
+  min-width: 52px;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--mid);
+  padding: 6px 8px 0 0;
+  text-align: right;
+  flex-shrink: 0;
+}
+.time-content {
+  flex: 1;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 0 8px 8px 0;
+  transition: background .15s;
+  min-height: 54px;
+  position: relative;
+}
+.time-content:hover { background: var(--teal-light); }
+.time-content.has-appt { cursor: default; background: transparent; }
+.time-content.blocked { background: #fff0f0; cursor: default; }
+.time-appt-chip {
+  background: var(--grad);
+  color: #fff;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: .78rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(58,181,198,.25);
+}
+.time-appt-chip-info { flex: 1; }
+.time-appt-chip-name { font-weight: 700; font-size: .8rem; }
+.time-appt-chip-service { font-size: .72rem; opacity: .9; }
+.time-appt-chip-actions { display: flex; gap: 4px; }
+.time-blocco-chip {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: .78rem;
+  font-weight: 700;
+}
+.time-add-hint {
+  font-size: .72rem;
+  color: var(--teal);
+  opacity: 0;
+  transition: opacity .15s;
+  pointer-events: none;
+}
+.time-content:hover .time-add-hint { opacity: 1; }
+.time-now-line {
+  position: absolute;
+  left: 52px;
+  right: 0;
+  height: 2px;
+  background: #ef4444;
+  z-index: 2;
+  pointer-events: none;
+}
+.time-now-dot {
+  position: absolute;
+  left: 44px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ef4444;
+  margin-top: -4px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* SETTIMANA */
+.week-col{border-radius:12px;overflow:hidden;margin-bottom:8px;border:1px solid var(--border);}
+.week-col-header{background:var(--teal-light);padding:8px 12px;font-size:.78rem;font-weight:700;color:var(--teal-dark);display:flex;justify-content:space-between;}
+.week-col-header.today-col{background:var(--grad);color:#fff;}
+.week-col-body{background:var(--white);padding:8px 10px;}
+.week-appt{border-left:3px solid var(--teal);padding:6px 8px;border-radius:0 8px 8px 0;margin-bottom:6px;background:var(--teal-light);font-size:.78rem;}
+.week-appt:last-child{margin-bottom:0;}
+.week-appt-name{font-weight:700;color:var(--dark);}
+.week-appt-info{color:var(--mid);}
+.week-empty{color:var(--border);font-size:.78rem;text-align:center;padding:6px 0;}
+.week-blocco{border-left:3px solid #f87171;padding:6px 8px;border-radius:0 8px 8px 0;margin-bottom:6px;background:#fff0f0;font-size:.78rem;color:#b91c1c;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-main">Beauty Jewel</span>
+    <span class="logo-sub">by Katia Carrera</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="header-date" id="headerDate"></div>
+    <button onclick="doLogout()" style="background:rgba(255,255,255,.2);border:none;border-radius:8px;padding:5px 10px;color:#fff;font-size:.75rem;font-weight:700;cursor:pointer;">Esci</button>
+  </div>
+</header>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">Beauty Jewel</div>
+    <div class="login-sub">Gestione • Area riservata</div>
+    <div class="login-error" id="loginError">Nickname o password errati ❌</div>
+    <div class="form-group" style="text-align:left">
+      <label>Nickname</label>
+      <input type="text" id="loginNick" placeholder="Il tuo nickname" autocomplete="username">
+    </div>
+    <div class="form-group" style="text-align:left">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="doLogin()" style="margin-top:4px">Entra →</button>
+  </div>
+</div>
+
+<div class="mode-banner" id="modeBanner">👤 Modalità Cliente — Prenota il tuo appuntamento</div>
+
+<nav id="mainNav">
+  <button class="nav-btn active" onclick="showPage('agenda',this)">📅 Agenda</button>
+  <button class="nav-btn" onclick="showPage('nuovo',this)">➕ Nuovo</button>
+  <button class="nav-btn" onclick="showPage('clienti',this)">👤 Clienti</button>
+  <button class="nav-btn" onclick="showPage('promemoria',this)">💬 WA</button>
+  <button class="nav-btn" onclick="showPage('stats',this)">📊 Stats</button>
+</nav>
+
+<!-- ===== AGENDA ===== -->
+<div class="page active" id="page-agenda">
+  <!-- Pending box sempre visibile -->
+  <div id="pendingBox"></div>
+
+  <!-- Switcher viste -->
+  <div class="view-toggle" style="margin-bottom:14px">
+    <button class="view-toggle-btn active" onclick="switchCalView('giorno',this)">Giorno</button>
+    <button class="view-toggle-btn" onclick="switchCalView('settimana',this)">Settimana</button>
+    <button class="view-toggle-btn" onclick="switchCalView('mese',this)">Mese</button>
+  </div>
+
+  <!-- NAV DATA -->
+  <div class="card" style="padding:12px 14px;margin-bottom:10px">
+    <div class="cal-header" style="margin-bottom:0">
+      <button class="cal-nav-btn" onclick="navCal(-1)">‹</button>
+      <div class="cal-month-title" id="calNavTitle" style="cursor:pointer" onclick="tornaOggi()"></div>
+      <button class="cal-nav-btn" onclick="navCal(1)">›</button>
+    </div>
+  </div>
+
+  <!-- VISTA GIORNO -->
+  <div id="vistaGiorno">
+    <div id="giornoAppts"></div>
+  </div>
+
+  <!-- VISTA SETTIMANA -->
+  <div id="vistaSettimana" style="display:none">
+    <div id="settimanaGrid"></div>
+  </div>
+
+  <!-- VISTA MESE -->
+  <div id="vistaMese" style="display:none">
+    <div class="card" style="padding:12px">
+      <div class="cal-week-names">
+        <div class="cal-week-name">Lu</div><div class="cal-week-name">Ma</div>
+        <div class="cal-week-name">Me</div><div class="cal-week-name">Gi</div>
+        <div class="cal-week-name">Ve</div><div class="cal-week-name">Sa</div>
+        <div class="cal-week-name">Do</div>
+      </div>
+      <div class="cal-days-grid" id="meseGrid"></div>
+    </div>
+    <div id="meseDayDetail" style="display:none" class="cal-day-detail"></div>
+  </div>
+</div>
+
+<!-- ===== NUOVO APPUNTAMENTO ===== -->
+<div class="page" id="page-nuovo">
+  <div class="section-title">Nuovo Appuntamento</div>
+  <div class="card">
+    <div class="form-group">
+      <label>Cliente *</label>
+      <select id="newCliente" onchange="onClienteChange()">
+        <option value="">— Seleziona cliente —</option>
+        <option value="__nuova__">+ Aggiungi nuova cliente</option>
+      </select>
+    </div>
+    <div id="nuovaClienteFields" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label>Nome *</label><input type="text" id="newNome" placeholder="Es. Giulia"></div>
+        <div class="form-group"><label>Cognome</label><input type="text" id="newCognome" placeholder="Es. Rossi"></div>
+      </div>
+      <div class="form-group"><label>WhatsApp (facoltativo)</label><input type="tel" id="newTelefono" placeholder="Es. 3331234567"></div>
+
+    </div>
+    <div class="form-group"><label>Data *</label><input type="date" id="newData" onchange="onDataChange()"></div>
+    <div class="form-group">
+      <label>Servizio principale *</label>
+      <select id="newServizio" onchange="onServizioChange('new')">
+        <option value="">— Scegli servizio —</option>
+      </select>
+    </div>
+    <div id="extraSection" style="display:none">
+      <label>Extra aggiuntivi</label>
+      <div class="extra-list" id="extraList"></div>
+    </div>
+    <div id="durataInfo" style="display:none" class="info-box info-teal mt-8">
+      ⏱ Durata stimata: <strong id="durataText"></strong>
+    </div>
+    <div id="newOraGroup" style="display:none">
+      <label>Ora disponibile *</label>
+      <div class="orari-grid" id="newOrariGrid" style="margin-top:6px;margin-bottom:10px"></div>
+      <input type="hidden" id="newOra">
+    </div>
+    <div id="newGiornoChiusoMsg" style="display:none" class="info-box info-yellow">
+      ⚠️ Questo giorno sei chiusa. Puoi comunque inserire un orario manuale:
+      <input type="time" id="newOraManuale" style="margin-top:8px" onchange="selezionaOraNew(this.value)">
+    </div>
+    <div class="form-group mt-8"><label>Note (opzionale)</label><textarea id="newNote" placeholder="Es. allergia al gel..."></textarea></div>
+    <button class="btn btn-primary btn-full" onclick="salvaAppuntamento()">✓ Salva appuntamento</button>
+  </div>
+
+  <div class="section-title" style="font-size:1.1rem;margin-top:8px">Blocca disponibilità</div>
+  <div class="card">
+    <div class="info-box info-yellow" style="margin-bottom:14px">
+      🚫 Usa questa sezione per bloccare una giornata o una fascia oraria — visite, documenti, impegni personali. Le clienti non potranno prenotare in quell'orario.
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Data *</label><input type="date" id="bloccoData"></div>
+      <div class="form-group">
+        <label>Tipo blocco</label>
+        <select id="bloccoTipo" onchange="onBloccoTipoChange()">
+          <option value="giorno">Giornata intera</option>
+          <option value="fascia">Fascia oraria</option>
+        </select>
+      </div>
+    </div>
+    <div id="bloccoFasciaFields" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label>Dalle</label><input type="time" id="bDalle"></div>
+        <div class="form-group"><label>Alle</label><input type="time" id="bAlle"></div>
+      </div>
+    </div>
+    <div class="form-group"><label>Motivo (opzionale)</label><input type="text" id="bloccoMotivo" placeholder="Es. Visita medica, Documenti..."></div>
+    <button class="btn btn-danger btn-full" onclick="salvaBlocco()">🚫 Blocca disponibilità</button>
+  </div>
+</div>
+
+<!-- ===== CLIENTI ===== -->
+<div class="page" id="page-clienti">
+  <div class="section-title">Le mie clienti</div>
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchClienti" placeholder="Cerca per nome..." oninput="renderClienti()">
+  </div>
+  <div id="clientiList"></div>
+</div>
+
+<!-- ===== PROMEMORIA ===== -->
+<div class="page" id="page-promemoria">
+  <div class="section-title">Promemoria WhatsApp</div>
+  <div class="info-box info-teal">
+    💡 Appuntamenti di <strong>domani</strong>. Clicca il verde → WhatsApp si apre con il messaggio già pronto!
+  </div>
+  <div id="promemoriList"></div>
+</div>
+
+<!-- ===== PRENOTA (VISTA CLIENTE) ===== -->
+<div class="page" id="page-prenota">
+  <div class="section-title">Prenota un appuntamento</div>
+  <div class="card" id="prenotaForm">
+    <div class="info-box info-teal" style="margin-bottom:14px">
+      ✨ Scegli il servizio, la data e l'orario disponibile. Ti confermeremo la prenotazione!
+    </div>
+    <div class="form-group"><label>Nome *</label><input type="text" id="pNome" placeholder="Il tuo nome"></div>
+    <div class="form-group"><label>Cognome *</label><input type="text" id="pCognome" placeholder="Il tuo cognome"></div>
+    <div class="form-group"><label>WhatsApp *</label><input type="tel" id="pTel" placeholder="Es. 3331234567"></div>
+    <div class="form-group"><label>Email (facoltativa)</label><input type="email" id="pEmail" placeholder="Es. nome@email.com"></div>
+    <div class="form-group">
+      <label>Servizio *</label>
+      <select id="pServizio" onchange="onServizioChange('p')">
+        <option value="">— Scegli servizio —</option>
+      </select>
+    </div>
+    <div id="pExtraSection" style="display:none">
+      <label>Extra aggiuntivi</label>
+      <div class="extra-list" id="pExtraList"></div>
+    </div>
+    <div id="pDurataInfo" style="display:none" class="info-box info-teal mt-8">
+      ⏱ Durata stimata: <strong id="pDurataText"></strong>
+    </div>
+    <div class="form-group mt-8"><label>Data *</label><input type="date" id="pData" onchange="caricaOrariDisponibili()"></div>
+    <div id="orariSection" style="display:none">
+      <label>Orario disponibile *</label>
+      <div class="orari-grid" id="orariGrid"></div>
+    </div>
+    <div class="form-group mt-8"><label>Note (facoltative)</label><textarea id="pNote" placeholder="Allergie, preferenze colore..."></textarea></div>
+    <button class="btn btn-primary btn-full mt-8" onclick="inviaPrenotazione()">📩 Invia richiesta</button>
+  </div>
+  <div id="prenotaSuccess" style="display:none" class="card" style="text-align:center">
+    <div style="font-size:2.5rem;margin-bottom:10px">🎉</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--teal-dark);margin-bottom:8px">Richiesta inviata!</div>
+    <p class="text-mid">Katia ti contatterà su WhatsApp per confermare. A presto! 💅</p>
+    <button class="btn btn-secondary btn-full mt-8" onclick="resetPrenotazione()">Nuova prenotazione</button>
+  </div>
+</div>
+
+<!-- ===== STATS ===== -->
+<div class="page" id="page-stats">
+  <div class="section-title">Statistiche</div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="section-title" style="font-size:1.1rem">Servizi più richiesti</div>
+  <div id="serviziStats" class="card"></div>
+</div>
+
+<!-- ===== MODAL CLIENTE ===== -->
+<div class="modal-overlay" id="clienteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalClienteNome"></div>
+      <button class="close-btn" onclick="closeModal('clienteModal')">✕</button>
+    </div>
+    <div id="modalClienteBody"></div>
+  </div>
+</div>
+
+<!-- ===== MODAL MODIFICA APPUNTAMENTO ===== -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Modifica appuntamento</div>
+      <button class="close-btn" onclick="closeModal('editModal')">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Data *</label><input type="date" id="editData"></div>
+      <div class="form-group"><label>Ora *</label><input type="time" id="editOra" onchange="aggiornaFineStimata('edit')"></div>
+    </div>
+    <div class="form-group">
+      <label>Servizio *</label>
+      <select id="editServizio" onchange="onServizioChange('edit')">
+        <option value="">— Scegli servizio —</option>
+      </select>
+    </div>
+    <div id="editExtraSection" style="display:none">
+      <label>Extra aggiuntivi</label>
+      <div class="extra-list" id="editExtraList"></div>
+    </div>
+    <div id="editDurataInfo" style="display:none" class="info-box info-teal mt-8">
+      ⏱ Durata stimata: <strong id="editDurataText"></strong> — Fine prevista: <strong id="editFineText"></strong>
+    </div>
+    <div class="form-group mt-8"><label>Note</label><textarea id="editNote"></textarea></div>
+    <button class="btn btn-primary btn-full mt-8" onclick="salvaModifica()">✓ Salva modifiche</button>
+  </div>
+</div>
+
+<script>
+// ===== COSTANTI =====
+const SERVIZI = [
+  { nome:'Manicure con smalto classico', durata:60, extra:false },
+  { nome:'Manicure senza smalto', durata:60, extra:false },
+  { nome:'Semipermanente classico', durata:60, extra:true },
+  { nome:'Semipermanente rinforzato', durata:90, extra:true },
+  { nome:'Ricostruzione in gel', durata:120, extra:true },
+  { nome:'Ricostruzione in acrigel', durata:120, extra:true },
+  { nome:'Copertura gel', durata:105, extra:true },
+  { nome:'Copertura acrigel', durata:105, extra:true },
+  { nome:'Rimozione semipermanente/gel + manicure', durata:60, extra:false },
+];
+const EXTRA = [
+  { nome:'Nail art', durata:15, maxDurata:30, label:'15–30 min' },
+  { nome:'Babyboomer / French', durata:15, maxDurata:30, label:'15–30 min' },
+  { nome:'Rimozione lavoro non mio', durata:15, maxDurata:15, label:'+15 min' },
+];
+// Orari per giorno — mer/gio/ven 9-15, sab 9-18, lun/mar/dom chiuso
+const ORARI_PER_GIORNO = {
+  1: [], // lunedì chiuso
+  2: [], // martedì chiuso
+  3: ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30'], // mer 9-15
+  4: ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30'], // gio 9-15
+  5: ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30'], // ven 9-15
+  6: ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'], // sab 9-18
+  0: [], // domenica solo su appuntamento diretto
+};
+// Fine turno per giorno (minuti dalla mezzanotte)
+const FINE_TURNO = { 1:0, 2:0, 3:15*60, 4:15*60, 5:15*60, 6:18*60, 0:0 };
+const ORARI_LAVORO = ORARI_PER_GIORNO; // alias
+
+// ===== DATI =====
+const DATI_GCAL = {
+  clienti:[
+    {id:'c1',nome:'Loredana',cognome:'',telefono:'',email:'',note:''},
+    {id:'c2',nome:'Jennyfer',cognome:'',telefono:'',email:'',note:''},
+    {id:'c3',nome:'Alice',cognome:'',telefono:'',email:'',note:''},
+    {id:'c4',nome:'Wassila',cognome:'',telefono:'',email:'',note:''},
+    {id:'c5',nome:'Melissa',cognome:'Villalobos',telefono:'',email:'',note:''},
+    {id:'c6',nome:'Sra Giovana',cognome:'',telefono:'',email:'',note:''},
+    {id:'c7',nome:'Maria',cognome:'Criollo',telefono:'',email:'',note:''},
+    {id:'c8',nome:'Cecilia',cognome:'',telefono:'3484928587',email:'',note:''},
+    {id:'c9',nome:'Irene',cognome:'Menghini',telefono:'3298065065',email:'',note:''},
+    {id:'c10',nome:'Marilena',cognome:'Coriolano',telefono:'',email:'',note:''},
+    {id:'c11',nome:'Karla',cognome:'Orellana',telefono:'',email:'',note:''},
+    {id:'c12',nome:'Carmen',cognome:'',telefono:'',email:'',note:''},
+    {id:'c13',nome:'Teresa',cognome:'Latocca',telefono:'',email:'',note:''},
+    {id:'c14',nome:'Florentina',cognome:'',telefono:'3898731845',email:'',note:''},
+    {id:'c15',nome:'Fiorella',cognome:'',telefono:'',email:'',note:'Modella per pratica'},
+    {id:'c16',nome:'Cuchita',cognome:'',telefono:'',email:'',note:''},
+    {id:'c17',nome:'Alina',cognome:'',telefono:'',email:'',note:''},
+    {id:'c18',nome:'Pamela',cognome:'',telefono:'',email:'',note:''},
+    {id:'c19',nome:'Megan',cognome:'',telefono:'',email:'',note:''},
+  ],
+  appuntamenti:[
+    {id:'a1',clienteId:'c1',data:'2026-05-02',ora:'09:00',servizio:'Copertura acrigel',extra:[],durata:105,note:''},
+    {id:'a2',clienteId:'c2',data:'2026-05-02',ora:'13:30',servizio:'Ricostruzione in acrigel',extra:[],durata:120,note:''},
+    {id:'a3',clienteId:'c3',data:'2026-05-03',ora:'09:00',servizio:'Copertura gel',extra:[],durata:105,note:'refill'},
+    {id:'a4',clienteId:'c4',data:'2026-05-06',ora:'09:00',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a5',clienteId:'c5',data:'2026-05-08',ora:'09:00',servizio:'Ricostruzione in acrigel',extra:[],durata:120,note:''},
+    {id:'a6',clienteId:'c5',data:'2026-05-08',ora:'12:30',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a7',clienteId:'c6',data:'2026-05-10',ora:'09:00',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a8',clienteId:'c7',data:'2026-05-14',ora:'09:00',servizio:'Semipermanente rinforzato',extra:[],durata:90,note:''},
+    {id:'a9',clienteId:'c8',data:'2026-05-20',ora:'09:30',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a10',clienteId:'c9',data:'2026-05-20',ora:'12:00',servizio:'Semipermanente rinforzato',extra:[],durata:90,note:''},
+    {id:'a11',clienteId:'c10',data:'2026-05-22',ora:'11:30',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a12',clienteId:'c11',data:'2026-05-27',ora:'09:00',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a13',clienteId:'c12',data:'2026-05-27',ora:'11:00',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a14',clienteId:'c13',data:'2026-05-28',ora:'09:00',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a15',clienteId:'c14',data:'2026-05-28',ora:'13:00',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a16',clienteId:'c15',data:'2026-05-29',ora:'09:30',servizio:'Semipermanente classico',extra:[],durata:60,note:'modella per pratica'},
+    {id:'a17',clienteId:'c16',data:'2026-05-30',ora:'09:00',servizio:'Semipermanente classico',extra:[],durata:60,note:''},
+    {id:'a18',clienteId:'c17',data:'2026-05-30',ora:'15:00',servizio:'Semipermanente rinforzato',extra:[],durata:90,note:''},
+    {id:'a19',clienteId:'c18',data:'2026-05-30',ora:'16:30',servizio:'Copertura acrigel',extra:[],durata:105,note:'rimozione inclusa'},
+    {id:'a20',clienteId:'c19',data:'2026-05-31',ora:'09:00',servizio:'Semipermanente rinforzato',extra:[],durata:90,note:'rimozione inclusa'},
+    {id:'a21',clienteId:'c3',data:'2026-06-07',ora:'09:30',servizio:'Copertura gel',extra:[],durata:105,note:'refill'},
+    {id:'a22',clienteId:'c10',data:'2026-06-18',ora:'11:30',servizio:'Semipermanente rinforzato',extra:[],durata:90,note:''},
+    {id:'a23',clienteId:'c9',data:'2026-06-19',ora:'12:30',servizio:'Semipermanente rinforzato',extra:[],durata:90,note:''},
+  ]
+};
+
+let clienti = JSON.parse(localStorage.getItem('bj_clienti')||'null') || DATI_GCAL.clienti;
+let appuntamenti = JSON.parse(localStorage.getItem('bj_appuntamenti')||'null') || DATI_GCAL.appuntamenti;
+let richiestePrenotazione = JSON.parse(localStorage.getItem('bj_richieste')||'[]');
+let blocchi = JSON.parse(localStorage.getItem('bj_blocchi')||'[]');
+let editingId = null;
+let currentFilter = 'oggi';
+let pOrarioScelto = null;
+
+function save(){
+  localStorage.setItem('bj_clienti',JSON.stringify(clienti));
+  localStorage.setItem('bj_appuntamenti',JSON.stringify(appuntamenti));
+  localStorage.setItem('bj_richieste',JSON.stringify(richiestePrenotazione));
+  localStorage.setItem('bj_blocchi',JSON.stringify(blocchi));
+}
+
+// ===== UTILS =====
+function today(){ return new Date().toISOString().split('T')[0]; }
+function tomorrow(){ const d=new Date();d.setDate(d.getDate()+1);return d.toISOString().split('T')[0]; }
+function startOfWeek(){ const d=new Date();const day=d.getDay();const diff=d.getDate()-day+(day===0?-6:1);d.setDate(diff);return d.toISOString().split('T')[0]; }
+function endOfWeek(){ const d=new Date();const day=d.getDay();const diff=d.getDate()-day+(day===0?0:7);d.setDate(diff);return d.toISOString().split('T')[0]; }
+function formatDate(str){ if(!str)return''; const[y,m,g]=str.split('-');return`${g}/${m}/${y}`; }
+function getCliente(id){ return clienti.find(c=>c.id===id); }
+function addMinutes(ora,min){
+  const[h,m]=ora.split(':').map(Number);
+  const tot=h*60+m+min;
+  return `${String(Math.floor(tot/60)).padStart(2,'0')}:${String(tot%60).padStart(2,'0')}`;
+}
+function oraToMin(ora){ const[h,m]=ora.split(':').map(Number);return h*60+m; }
+function minToOra(min){ return`${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`; }
+function durataLeggibile(min){ const h=Math.floor(min/60);const m=min%60;return h>0?(m>0?`${h}h ${m}min`:`${h}h`):`${m}min`; }
+function getServizio(nome){ return SERVIZI.find(s=>s.nome===nome); }
+
+// ===== HEADER =====
+function updateHeader(){
+  const d=new Date();
+  document.getElementById('headerDate').textContent=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+}
+updateHeader();
+
+// ===== NAV =====
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='agenda'){ renderCal(); }
+  if(id==='clienti'){renderClienti();populateClienteSelect();}
+  if(id==='promemoria') renderPromemoria();
+  if(id==='stats') renderStats();
+  if(id==='nuovo'){
+    populateClienteSelect();
+    populateServizi('new');
+    // Mantieni la data se è già stata passata dal calendario, altrimenti metti oggi
+    var dataAttuale = document.getElementById('newData').value;
+    if(!dataAttuale) document.getElementById('newData').value = today();
+    else onDataChange(); // ricarica gli orari per la data già selezionata
+  }
+  if(id==='prenota'){populateServizi('p');document.getElementById('pData').min=today();}
+}
+
+// ===== SERVIZI SELECT =====
+function populateServizi(ctx){
+  const ids={new:'newServizio',p:'pServizio',edit:'editServizio'};
+  const sel=document.getElementById(ids[ctx]);
+  if(!sel)return;
+  const val=sel.value;
+  sel.innerHTML='<option value="">— Scegli servizio —</option>';
+  SERVIZI.forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s.nome;o.textContent=s.nome+' ('+durataLeggibile(s.durata)+')';
+    sel.appendChild(o);
+  });
+  sel.value=val;
+}
+
+function onServizioChange(ctx){
+  const ids={new:{sel:'newServizio',extra:'extraSection',list:'extraList',dur:'durataInfo',dt:'durataText',ft:'fineText',ora:'newOra'},
+             p:{sel:'pServizio',extra:'pExtraSection',list:'pExtraList',dur:'pDurataInfo',dt:'pDurataText',ft:null,ora:null},
+             edit:{sel:'editServizio',extra:'editExtraSection',list:'editExtraList',dur:'editDurataInfo',dt:'editDurataText',ft:'editFineText',ora:'editOra'}};
+  const id=ids[ctx];
+  const sNome=document.getElementById(id.sel).value;
+  const serv=getServizio(sNome);
+  document.getElementById(id.extra).style.display=serv&&serv.extra?'block':'none';
+  if(serv&&serv.extra) renderExtra(ctx,id.list);
+  aggiornaFineStimata(ctx);
+  if(ctx==='p') caricaOrariDisponibili();
+  // Per nuovo appuntamento: aggiorna orari se la data è già selezionata
+  if(ctx==='new'){
+    const data=document.getElementById('newData').value;
+    if(data) onDataChange();
+  }
+}
+
+function renderExtra(ctx,listId){
+  const list=document.getElementById(listId);
+  list.innerHTML=EXTRA.map((e,i)=>`
+    <div class="extra-item" id="extra_${ctx}_${i}" onclick="toggleExtra('${ctx}',${i})">
+      <input type="checkbox" id="chk_${ctx}_${i}">
+      <span class="extra-label">${e.nome}</span>
+      <span class="extra-time">${e.label}</span>
+    </div>`).join('');
+}
+
+function toggleExtra(ctx,i){
+  const chk=document.getElementById(`chk_${ctx}_${i}`);
+  const item=document.getElementById(`extra_${ctx}_${i}`);
+  chk.checked=!chk.checked;
+  item.classList.toggle('selected',chk.checked);
+  aggiornaFineStimata(ctx);
+  if(ctx==='p') caricaOrariDisponibili();
+}
+
+function getSelectedExtra(ctx){
+  return EXTRA.map((e,i)=>{
+    const chk=document.getElementById(`chk_${ctx}_${i}`);
+    return chk&&chk.checked?e:null;
+  }).filter(Boolean);
+}
+
+function calcolaDurata(ctx){
+  const ids={new:'newServizio',p:'pServizio',edit:'editServizio'};
+  const sNome=document.getElementById(ids[ctx]).value;
+  const serv=getServizio(sNome);
+  if(!serv)return 0;
+  let tot=serv.durata;
+  getSelectedExtra(ctx).forEach(e=>tot+=e.durata);
+  return tot;
+}
+
+function aggiornaFineStimata(ctx){
+  const ids={new:{dur:'durataInfo',dt:'durataText',ft:'fineText',ora:'newOra'},
+             edit:{dur:'editDurataInfo',dt:'editDurataText',ft:'editFineText',ora:'editOra'},
+             p:{dur:'pDurataInfo',dt:'pDurataText',ft:null,ora:null}};
+  const id=ids[ctx];
+  const min=calcolaDurata(ctx);
+  if(!min){document.getElementById(id.dur).style.display='none';return;}
+  document.getElementById(id.dur).style.display='block';
+  document.getElementById(id.dt).textContent=durataLeggibile(min);
+  if(id.ft&&id.ora){
+    const ora=document.getElementById(id.ora).value;
+    if(ora) document.getElementById(id.ft).textContent=addMinutes(ora,min);
+  }
+}
+
+// ===== CLIENTE SELECT =====
+function populateClienteSelect(){
+  const sel=document.getElementById('newCliente');
+  if(!sel)return;
+  const val=sel.value;
+  sel.innerHTML='<option value="">— Seleziona cliente —</option><option value="__nuova__">+ Aggiungi nuova cliente</option>';
+  [...clienti].sort((a,b)=>a.nome.localeCompare(b.nome)).forEach(c=>{
+    const o=document.createElement('option');
+    o.value=c.id;o.textContent=c.nome+' '+c.cognome;
+    sel.appendChild(o);
+  });
+  sel.value=val;
+}
+
+function onClienteChange(){
+  document.getElementById('nuovaClienteFields').style.display=
+    document.getElementById('newCliente').value==='__nuova__'?'block':'none';
+}
+
+// ===== AGENDA =====
+function filterAgenda(filter,btn){
+  currentFilter=filter;
+  document.querySelectorAll('#page-agenda .tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderAgenda(filter);
+}
+
+function renderAgenda(filter){
+  const list=document.getElementById('agendaList');
+  const pendingBox=document.getElementById('pendingBox');
+  let filtered=[...appuntamenti];
+  const t=today(),tm=tomorrow(),sw=startOfWeek(),ew=endOfWeek();
+  if(filter==='oggi') filtered=filtered.filter(a=>a.data===t);
+  else if(filter==='domani') filtered=filtered.filter(a=>a.data===tm);
+  else if(filter==='settimana') filtered=filtered.filter(a=>a.data>=sw&&a.data<=ew);
+  filtered.sort((a,b)=>(a.data+a.ora).localeCompare(b.data+b.ora));
+
+  // pending box
+  const pending=richiestePrenotazione.filter(r=>r.stato==='pending');
+  if(pending.length&&filter==='tutti'||filter==='oggi'||filter==='domani'||filter==='settimana'){
+    const pendingAll=richiestePrenotazione.filter(r=>r.stato==='pending');
+    if(pendingAll.length){
+      pendingBox.innerHTML=`<div class="card info-yellow" style="margin-bottom:12px">
+        ⚠️ <strong>${pendingAll.length} richiesta${pendingAll.length>1?'e':''} di prenotazione</strong> in attesa di conferma.
+        <button class="btn btn-warning btn-sm" style="margin-top:8px;display:block" onclick="filterAgenda('richieste',this)">Vedi richieste</button>
+      </div>`;
+    } else pendingBox.innerHTML='';
+  } else pendingBox.innerHTML='';
+
+  // richieste pending tab
+  if(filter==='richieste'){
+    const reqs=richiestePrenotazione.filter(r=>r.stato==='pending');
+    if(!reqs.length){list.innerHTML='<div class="empty"><div class="empty-icon">✅</div>Nessuna richiesta in attesa</div>';return;}
+    list.innerHTML=reqs.map(r=>`
+      <div class="appt-card pending">
+        <div class="appt-info">
+          <div class="appt-name">${r.nome} ${r.cognome} <span class="badge badge-pending">In attesa</span></div>
+          <div class="appt-service">${r.servizio}</div>
+          <div class="appt-time">🕐 ${formatDate(r.data)} alle ${r.ora}</div>
+          <div class="appt-time">📱 ${r.telefono}</div>
+          ${r.note?`<div class="text-mid mt-8">📝 ${r.note}</div>`:''}
+        </div>
+        <div class="appt-actions">
+          <button class="btn btn-primary btn-sm" onclick="accettaRichiesta('${r.id}')">✓</button>
+          <button class="btn btn-danger btn-sm" onclick="rifiutaRichiesta('${r.id}')">✕</button>
+        </div>
+      </div>`).join('');
+    return;
+  }
+
+  // Blocchi per questo filtro
+  let blocchiFiltrati=[...blocchi];
+  if(filter==='oggi') blocchiFiltrati=blocchiFiltrati.filter(b=>b.data===t);
+  else if(filter==='domani') blocchiFiltrati=blocchiFiltrati.filter(b=>b.data===tm);
+  else if(filter==='settimana') blocchiFiltrati=blocchiFiltrati.filter(b=>b.data>=sw&&b.data<=ew);
+
+  if(!filtered.length&&!blocchiFiltrati.length){list.innerHTML='<div class="empty"><div class="empty-icon">📭</div>Nessun appuntamento</div>';return;}
+
+  // Render blocchi
+  const blocchiHtml=blocchiFiltrati.map(b=>`
+    <div class="blocco-card">
+      <div class="appt-info">
+        <div class="blocco-label">🚫 ${b.motivo}</div>
+        <div class="appt-time">📅 ${formatDate(b.data)} ${b.tipo==='fascia'?`· ${b.dalle} → ${b.alle}`:'· Giornata intera'}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="eliminaBlocco('${b.id}')">🗑</button>
+    </div>`).join('');
+  const tNow=new Date().toTimeString().slice(0,5);
+  list.innerHTML=blocchiHtml+filtered.map(a=>{
+    const cl=getCliente(a.clienteId);
+    const nome=cl?cl.nome+' '+cl.cognome:a.nomeTemp||'Cliente';
+    const isPast=a.data<t||(a.data===t&&a.ora<tNow);
+    const isToday=a.data===t;
+    const dur=a.durata?durataLeggibile(a.durata):'';
+    const fine=a.durata&&a.ora?addMinutes(a.ora,a.durata):'';
+    return`<div class="appt-card ${isPast?'past':''}">
+      <div class="appt-info">
+        <div class="appt-name">${nome}${isToday?' <span class="badge badge-today">Oggi</span>':''}</div>
+        <div class="appt-service">${a.servizio}${a.extra&&a.extra.length?' + '+a.extra.map(e=>e.nome).join(', '):''}</div>
+        <div class="appt-time">🕐 ${formatDate(a.data)} ${a.ora}${fine?' → '+fine:''}</div>
+        ${dur?`<div class="appt-duration">⏱ ${dur}</div>`:''}
+        ${a.note?`<div class="text-mid mt-8">📝 ${a.note}</div>`:''}
+      </div>
+      <div class="appt-actions">
+        <button class="btn btn-warning btn-sm" onclick="apriModifica('${a.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="eliminaAppuntamento('${a.id}')">🗑</button>
+        <button class="btn btn-secondary btn-sm" style="font-size:.65rem;padding:5px 7px" onclick='apriGoogleCalendar(${JSON.stringify(a)})' title="Aggiungi a Google Calendar">📅</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== SALVA APPUNTAMENTO =====
+function salvaAppuntamento(){
+  const clienteId=document.getElementById('newCliente').value;
+  const data=document.getElementById('newData').value;
+  const ora=document.getElementById('newOra').value;
+  const servizio=document.getElementById('newServizio').value;
+  if(!data||!ora||!servizio){alert('Compila data, ora e servizio!');return;}
+  let cid=clienteId;
+  if(clienteId==='__nuova__'){
+    const nome=document.getElementById('newNome').value.trim();
+    const tel=document.getElementById('newTelefono').value.trim();
+    if(!nome){alert('Inserisci almeno il nome della cliente!');return;}
+    const nuova={id:Date.now().toString(),nome,cognome:document.getElementById('newCognome').value.trim(),
+      telefono:tel,email:'',note:''};
+    clienti.push(nuova);cid=nuova.id;
+  } else if(!clienteId){alert('Seleziona una cliente!');return;}
+  const extra=getSelectedExtra('new');
+  const durata=calcolaDurata('new');
+  appuntamenti.push({id:Date.now().toString()+Math.random(),clienteId:cid,data,ora,servizio,extra,durata,note:document.getElementById('newNote').value.trim()});
+  save();
+  // reset
+  ['newCliente','newOra','newServizio','newNote','newNome','newCognome','newTelefono'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('nuovaClienteFields').style.display='none';
+  document.getElementById('extraSection').style.display='none';
+  document.getElementById('durataInfo').style.display='none';
+  document.getElementById('newData').value=today();
+  var ultimoApp=appuntamenti[appuntamenti.length-1];
+  var clSalvata=getCliente(ultimoApp.clienteId);
+  alert('Appuntamento salvato!');
+  // Messaggio conferma WhatsApp
+  if(clSalvata && clSalvata.telefono){
+    var giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+    var dConf=new Date(ultimoApp.data);
+    var giornoConf=giorni[dConf.getDay()];
+    var extraTxtConf=ultimoApp.extra&&ultimoApp.extra.length?' + '+ultimoApp.extra.map(function(e){return e.nome;}).join(', '):'';
+    var fineConf=ultimoApp.durata?addMinutes(ultimoApp.ora,ultimoApp.durata):'';
+    var msgConf='Ciao '+clSalvata.nome+'! 💅\n\n'+
+      'Il tuo appuntamento è confermato!\n\n'+
+      '📅 '+giornoConf+' '+formatDate(ultimoApp.data)+'\n'+
+      '🕐 Ore '+ultimoApp.ora+'\n'+
+      '💅 '+ultimoApp.servizio+extraTxtConf+'\n'+
+      (ultimoApp.note?'\n📝 '+ultimoApp.note:'')+'\n\n'+
+      'Nel caso non potessi venire, ti chiedo gentilmente di avvisarmi con il prima possibile così posso gestire l\'agenda. 🙏\n\n'+
+      'A presto! 🌸\n— Katia, Beauty Jewel';
+    var telConf=clSalvata.telefono.replace(/[^0-9]/g,'');
+    if(confirm('Vuoi mandare il messaggio di conferma su WhatsApp a '+clSalvata.nome+'?')){
+      window.open('https://wa.me/39'+telConf+'?text='+encodeURIComponent(msgConf),'_blank');
+    }
+  }
+  // Google Calendar
+  if(confirm('Vuoi aggiungerlo anche a Google Calendar?')){
+    apriGoogleCalendar(ultimoApp);
+  }
+  document.querySelectorAll('.nav-btn')[0].click();
+}
+
+function eliminaAppuntamento(id){
+  const a=appuntamenti.find(x=>x.id===id);
+  if(!a)return;
+  const cl=getCliente(a.clienteId);
+  const nome=cl?cl.nome:'la cliente';
+  if(!confirm(`Cancellare l'appuntamento di ${nome} del ${formatDate(a.data)} alle ${a.ora}?`))return;
+  appuntamenti=appuntamenti.filter(x=>x.id!==id);
+  save();
+  renderAgenda(currentFilter);
+  // Proponi di avvisare la cliente su WhatsApp
+  if(cl&&cl.telefono){
+    const tel=cl.telefono.replace(/\D/g,'');
+    const msg=`Ciao ${cl.nome}! 💅\nPurtroppo devo cancellare il tuo appuntamento del ${formatDate(a.data)} alle ${a.ora}.\nContattami per fissarne uno nuovo!\n— Katia, Beauty Jewel`;
+    if(confirm('Vuoi avvisare la cliente su WhatsApp?')){
+      window.open(`https://wa.me/39${tel}?text=${encodeURIComponent(msg)}`,'_blank');
+    }
+  }
+}
+
+function onDataChange(){
+  const data = document.getElementById('newData').value;
+  if (!data) return;
+  document.getElementById('newOra').value = '';
+  const d = new Date(data);
+  const dow = d.getDay();
+  const orari = ORARI_PER_GIORNO[dow] || [];
+  const durata = calcolaDurata('new') || 60;
+  const fineTurno = FINE_TURNO[dow] || 0;
+  const oraGroup = document.getElementById('newOraGroup');
+  const chiusoMsg = document.getElementById('newGiornoChiusoMsg');
+  const grid = document.getElementById('newOrariGrid');
+
+  if (!orari.length) {
+    oraGroup.style.display = 'none';
+    chiusoMsg.style.display = 'block';
+    return;
+  }
+  chiusoMsg.style.display = 'none';
+  oraGroup.style.display = 'block';
+
+  const occupati = appuntamenti.filter(a => a.data === data);
+  const blocchiGiorno = blocchi.filter(b => b.data === data);
+  const giornoBloccato = blocchiGiorno.some(b => b.tipo === 'giorno');
+  const tNow = new Date().toTimeString().slice(0,5);
+
+  if(giornoBloccato){
+    grid.innerHTML = '<div class="info-box info-yellow" style="grid-column:1/-1">Hai bloccato questa giornata. Puoi inserire un orario manuale:</div>';
+    chiusoMsg.style.display = 'block';
+    return;
+  }
+
+  grid.innerHTML = '';
+  orari.forEach(function(orario){
+    const orMin = oraToMin(orario);
+    const orFine = orMin + durata;
+    const sforaT = fineTurno && orFine > fineTurno;
+    const isOcc = occupati.some(function(a){
+      const aS = oraToMin(a.ora); const aF = aS + (a.durata || 60);
+      return orMin < aF && orFine > aS;
+    });
+    const isBlocco = blocchiGiorno.some(function(b){
+      if(b.tipo==='giorno') return true;
+      const bS=oraToMin(b.dalle); const bF=oraToMin(b.alle);
+      return orMin < bF && orFine > bS;
+    });
+    const isPast = data === today() && orario <= tNow;
+    const disabled = sforaT || isOcc || isBlocco || isPast;
+    const label = isBlocco ? 'Bloccato' : isOcc ? 'Occupato' : sforaT ? 'Sfora' : orario;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'orario-btn' + (disabled ? ' occupato' : '');
+    btn.textContent = label;
+    if(disabled) btn.disabled = true;
+    btn.setAttribute('data-ora', orario);
+    btn.onclick = function(){ selezionaOraNew(this.getAttribute('data-ora')); };
+    grid.appendChild(btn);
+  });
+  aggiornaFineStimata('new');
+}
+
+function selezionaOraNew(ora){
+  document.getElementById('newOra').value = ora;
+  document.querySelectorAll('#newOrariGrid .orario-btn').forEach(function(b){
+    b.classList.toggle('selected', b.textContent === ora);
+  });
+  aggiornaFineStimata('new');
+}
+
+// ===== MODIFICA APPUNTAMENTO =====
+function apriModifica(id){
+  const a=appuntamenti.find(x=>x.id===id);
+  if(!a)return;
+  editingId=id;
+  populateServizi('edit');
+  document.getElementById('editData').value=a.data;
+  document.getElementById('editOra').value=a.ora;
+  document.getElementById('editServizio').value=a.servizio;
+  document.getElementById('editNote').value=a.note||'';
+  const serv=getServizio(a.servizio);
+  if(serv&&serv.extra){
+    document.getElementById('editExtraSection').style.display='block';
+    renderExtra('edit','editExtraList');
+    // ripristina extra selezionati
+    setTimeout(()=>{
+      if(a.extra) a.extra.forEach(ex=>{
+        const i=EXTRA.findIndex(e=>e.nome===ex.nome);
+        if(i>=0){
+          const chk=document.getElementById(`chk_edit_${i}`);
+          const item=document.getElementById(`extra_edit_${i}`);
+          if(chk){chk.checked=true;item.classList.add('selected');}
+        }
+      });
+      aggiornaFineStimata('edit');
+    },50);
+  } else {
+    document.getElementById('editExtraSection').style.display='none';
+  }
+  aggiornaFineStimata('edit');
+  document.getElementById('editModal').classList.add('open');
+}
+
+function salvaModifica(){
+  if(!editingId)return;
+  const idx=appuntamenti.findIndex(a=>a.id===editingId);
+  if(idx<0)return;
+  const data=document.getElementById('editData').value;
+  const ora=document.getElementById('editOra').value;
+  const servizio=document.getElementById('editServizio').value;
+  if(!data||!ora||!servizio){alert('Compila tutti i campi!');return;}
+  const extra=getSelectedExtra('edit');
+  const durata=calcolaDurata('edit');
+  appuntamenti[idx]={...appuntamenti[idx],data,ora,servizio,extra,durata,note:document.getElementById('editNote').value.trim()};
+  save();closeModal('editModal');renderAgenda(currentFilter);
+}
+
+// ===== CLIENTI =====
+function renderClienti(){
+  var search = document.getElementById('searchClienti').value.toLowerCase();
+  var list = document.getElementById('clientiList');
+  var filtered = clienti.filter(function(c){return (c.nome+' '+c.cognome).toLowerCase().includes(search);});
+  filtered.sort(function(a,b){return a.nome.localeCompare(b.nome);});
+  if(!filtered.length){list.innerHTML='<div class="empty"><div class="empty-icon">👤</div>Nessuna cliente</div>';return;}
+  list.innerHTML = '';
+  filtered.forEach(function(c){
+    var nApp = appuntamenti.filter(function(a){return a.clienteId===c.id;}).length;
+    var futuro = appuntamenti.filter(function(a){return a.clienteId===c.id&&a.data>=today();}).sort(function(a,b){return a.data.localeCompare(b.data);})[0];
+    var div = document.createElement('div');
+    div.className = 'client-card';
+    var infoDiv = document.createElement('div');
+    infoDiv.innerHTML = '<div class="client-name">'+c.nome+' '+c.cognome+'</div>'+
+      '<div class="client-meta">📱 '+(c.telefono||'—')+'</div>'+
+      (futuro?'<div class="client-meta" style="color:var(--teal-dark);font-weight:700">Prossimo: '+formatDate(futuro.data)+' '+futuro.ora+'</div>':
+              '<span class="badge badge-teal">'+nApp+' visita'+(nApp!==1?'e':'a')+'</span>');
+    infoDiv.style.flex = '1';
+    infoDiv.style.cursor = 'pointer';
+    infoDiv.onclick = function(){ openCliente(c.id); };
+    var btnsDiv = document.createElement('div');
+    btnsDiv.style.cssText = 'display:flex;gap:6px;align-items:center';
+    var btnEdit = document.createElement('button');
+    btnEdit.className = 'btn btn-secondary btn-sm';
+    btnEdit.textContent = '✏️';
+    btnEdit.onclick = function(){ apriModificaCliente(c.id); };
+    var btnDel = document.createElement('button');
+    btnDel.className = 'btn btn-danger btn-sm';
+    btnDel.textContent = '🗑';
+    btnDel.onclick = function(){ eliminaCliente(c.id); };
+    btnsDiv.appendChild(btnEdit);
+    btnsDiv.appendChild(btnDel);
+    div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:10px';
+    div.appendChild(infoDiv);
+    div.appendChild(btnsDiv);
+    list.appendChild(div);
+  });
+}
+
+
+
+function openCliente(id){
+  const c=getCliente(id);if(!c)return;
+  document.getElementById('modalClienteNome').textContent=c.nome+' '+c.cognome;
+  const storico=appuntamenti.filter(a=>a.clienteId===id).sort((a,b)=>b.data.localeCompare(a.data));
+  document.getElementById('modalClienteBody').innerHTML=`
+    <div id="clienteInfo_${id}">
+      <div class="text-mid">📱 ${c.telefono||'—'}</div>
+
+      ${c.note?`<div class="text-mid mt-8">📝 ${c.note}</div>`:''}
+      <div class="divider"></div>
+      <div style="font-weight:700;margin-bottom:10px">Storico visite (${storico.length})</div>
+      ${storico.length?storico.map(a=>`
+        <div class="storico-item">
+          <span>${formatDate(a.data)} ${a.ora}</span>
+          <span style="color:var(--teal-dark);font-weight:700">${a.servizio}</span>
+        </div>`).join(''):'<div class="text-mid">Nessuna visita</div>'}
+      <div class="divider"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary btn-sm" onclick="apriModificaCliente('${id}')">✏️ Modifica</button>
+        <button class="btn btn-danger btn-sm" onclick="eliminaCliente('${id}')">🗑 Elimina</button>
+      </div>
+    </div>
+    <div id="clienteEdit_${id}" style="display:none">
+      <div class="form-group"><label>Nome *</label><input type="text" id="editCNome" value="${c.nome}"></div>
+      <div class="form-group"><label>Cognome</label><input type="text" id="editCCognome" value="${c.cognome||''}"></div>
+      <div class="form-group"><label>WhatsApp</label><input type="tel" id="editCTel" value="${c.telefono||''}"></div>
+
+      <div class="form-group"><label>Note</label><textarea id="editCNote">${c.note||''}</textarea></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="salvaModificaCliente('${id}')">✓ Salva</button>
+        <button class="btn btn-secondary btn-sm" onclick="annullaModificaCliente('${id}')">Annulla</button>
+      </div>
+    </div>`;
+  document.getElementById('clienteModal').classList.add('open');
+}
+
+function eliminaCliente(id){
+  if(!confirm('Eliminare questa cliente e tutti i suoi appuntamenti?'))return;
+  clienti=clienti.filter(c=>c.id!==id);
+  appuntamenti=appuntamenti.filter(a=>a.clienteId!==id);
+  save();closeModal('clienteModal');renderClienti();
+}
+
+// ===== PROMEMORIA =====
+function renderPromemoria(){
+  const tm=tomorrow();
+  const list=document.getElementById('promemoriList');
+  const domani=appuntamenti.filter(a=>a.data===tm).sort((a,b)=>a.ora.localeCompare(b.ora));
+  if(!domani.length){list.innerHTML='<div class="empty"><div class="empty-icon">🌙</div>Nessun appuntamento domani 💅</div>';return;}
+  list.innerHTML=domani.map(a=>{
+    const cl=getCliente(a.clienteId);
+    const nome=cl?cl.nome:'Cliente';
+    const tel=cl&&cl.telefono?cl.telefono.replace(/\D/g,''):'';
+    const msg=generaMessaggio(nome,a.data,a.ora,a.servizio,a.durata);
+    const waLink=tel?`https://wa.me/39${tel}?text=${encodeURIComponent(msg)}`:'#';
+    return`<div class="card">
+      <div class="flex-between">
+        <div>
+          <div class="appt-name">${cl?cl.nome+' '+cl.cognome:'Cliente'}</div>
+          <div class="appt-service">${a.servizio}</div>
+          <div class="appt-time">🕐 ${a.ora}${a.durata?' ('+durataLeggibile(a.durata)+')':''}</div>
+        </div>
+      </div>
+      <div class="wa-preview">${msg}</div>
+      ${tel?`<a href="${waLink}" target="_blank" class="btn btn-whatsapp btn-full">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.543 4.064 1.497 5.779L0 24l6.389-1.677A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.846 0-3.574-.497-5.065-1.364l-.363-.215-3.766.988.988-3.667-.235-.374A9.934 9.934 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Manda promemoria a ${nome}
+      </a>`:
+      `<div class="info-box info-yellow">⚠️ Numero WhatsApp mancante — aggiungilo nella scheda cliente</div>`}
+    </div>`;
+  }).join('');
+}
+
+function generaMessaggio(nome,data,ora,servizio,durata){
+  var giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+  var d=new Date(data);
+  var giorno=giorni[d.getDay()];
+  return 'Ciao '+nome+'! 💅\n\n'+
+    'Ti ricordo il tuo appuntamento di domani:\n\n'+
+    '📅 '+giorno+' '+formatDate(data)+'\n'+
+    '🕐 Ore '+ora+'\n'+
+    '💅 '+servizio+'\n\n'+
+    'Ti aspetto puntuale! ⏰\n\n'+
+    'Se non puoi venire, avvisami il prima possibile.\n\n'+
+    'A domani! 🌸\n— Katia, Beauty Jewel';
+}
+
+// ===== PRENOTAZIONE CLIENTE =====
+function caricaOrariDisponibili(){
+  const data=document.getElementById('pData').value;
+  const durata=calcolaDurata('p');
+  const sec=document.getElementById('orariSection');
+  if(!data){sec.style.display='none';return;}
+  sec.style.display='block';
+  pOrarioScelto=null;
+  const occupati=appuntamenti.filter(a=>a.data===data);
+  const grid=document.getElementById('orariGrid');
+  grid.innerHTML=ORARI_LAVORO.map(orario=>{
+    const orMin=oraToMin(orario);
+    const orFine=orMin+(durata||60);
+    const isOccupato=occupati.some(a=>{
+      const aStart=oraToMin(a.ora);
+      const aFine=aStart+(a.durata||60);
+      return orMin<aFine&&orFine>aStart;
+    });
+    const isPast=data===today()&&orMin<=oraToMin(new Date().toTimeString().slice(0,5));
+    const disabled=isOccupato||isPast;
+    return`<button class="orario-btn ${disabled?'occupato':''}" ${disabled?'disabled':''} onclick="selezionaOrario('${orario}',this)">${orario}</button>`;
+  }).join('');
+}
+
+function selezionaOrario(ora,btn){
+  document.querySelectorAll('.orario-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  pOrarioScelto=ora;
+  aggiornaFineStimata('p');
+}
+
+function inviaPrenotazione(){
+  const nome=document.getElementById('pNome').value.trim();
+  const cognome=document.getElementById('pCognome').value.trim();
+  const tel=document.getElementById('pTel').value.trim();
+  const email=document.getElementById('pEmail').value.trim();
+  const servizio=document.getElementById('pServizio').value;
+  const data=document.getElementById('pData').value;
+  if(!nome||!cognome||!tel||!servizio||!data||!pOrarioScelto){
+    alert('Compila tutti i campi obbligatori e scegli un orario!');return;
+  }
+  const extra=getSelectedExtra('p');
+  const durata=calcolaDurata('p');
+  richiestePrenotazione.push({
+    id:Date.now().toString(),stato:'pending',
+    nome,cognome,telefono:tel,email,servizio,extra,durata,
+    data,ora:pOrarioScelto,note:document.getElementById('pNote').value.trim()
+  });
+  save();
+  document.getElementById('prenotaForm').style.display='none';
+  document.getElementById('prenotaSuccess').style.display='block';
+}
+
+function resetPrenotazione(){
+  document.getElementById('prenotaForm').style.display='block';
+  document.getElementById('prenotaSuccess').style.display='none';
+  ['pNome','pCognome','pTel','pEmail','pNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pServizio').value='';
+  document.getElementById('pData').value='';
+  document.getElementById('orariSection').style.display='none';
+  document.getElementById('pExtraSection').style.display='none';
+  document.getElementById('pDurataInfo').style.display='none';
+  pOrarioScelto=null;
+}
+
+function accettaRichiesta(id){
+  const r=richiestePrenotazione.find(x=>x.id===id);
+  if(!r)return;
+  r.stato='accettata';
+  let cl=clienti.find(c=>c.telefono===r.telefono);
+  if(!cl){
+    cl={id:Date.now().toString(),nome:r.nome,cognome:r.cognome,telefono:r.telefono,email:'',note:''};
+    clienti.push(cl);
+  }
+  const nuovoApp={id:Date.now().toString()+Math.random(),clienteId:cl.id,data:r.data,ora:r.ora,servizio:r.servizio,extra:r.extra||[],durata:r.durata,note:r.note};
+  appuntamenti.push(nuovoApp);
+  save();
+  renderAgenda(currentFilter);
+  const giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+  const d=new Date(r.data);
+  const giorno=giorni[d.getDay()];
+  const extraTxt=r.extra&&r.extra.length?' + '+r.extra.map(e=>e.nome).join(', '):'';
+  const fine=r.durata?addMinutes(r.ora,r.durata):'';
+  const msg='Ciao '+r.nome+'! 💅\n\n'+
+    'La tua prenotazione è confermata!\n\n'+
+    '📅 '+giorno+' '+formatDate(r.data)+'\n'+
+    '🕐 Ore '+r.ora+'\n'+
+    '💅 '+r.servizio+extraTxt+'\n'+
+    (r.note?'\n📝 '+r.note:'')+'\n\n'+
+    'Nel caso non potessi venire, ti chiedo gentilmente di avvisarmi il prima possibile così posso gestire l\'agenda. 🙏\n\n'+
+    'A presto! 🌸\n— Katia, Beauty Jewel';
+  const tel=r.telefono.replace(/[^0-9]/g,'');
+  alert('Prenotazione accettata e aggiunta all agenda!');
+  if(confirm('Mandi il messaggio di conferma su WhatsApp a '+r.nome+'?')){
+    window.open('https://wa.me/39'+tel+'?text='+encodeURIComponent(msg),'_blank');
+  }
+}
+
+function rifiutaRichiesta(id){
+  if(!confirm('Rifiutare questa richiesta?'))return;
+  richiestePrenotazione=richiestePrenotazione.filter(x=>x.id!==id);
+  save();renderAgenda(currentFilter);
+}
+
+// ===== STATS =====
+function renderStats(){
+  const t=today();const mese=new Date().toISOString().slice(0,7);
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-num">${clienti.length}</div><div class="stat-label">Clienti totali</div></div>
+    <div class="stat-card"><div class="stat-num">${appuntamenti.length}</div><div class="stat-label">Appuntamenti totali</div></div>
+    <div class="stat-card"><div class="stat-num">${appuntamenti.filter(a=>a.data===t).length}</div><div class="stat-label">Oggi</div></div>
+    <div class="stat-card"><div class="stat-num">${appuntamenti.filter(a=>a.data.startsWith(mese)).length}</div><div class="stat-label">Questo mese</div></div>`;
+  const cnt={};appuntamenti.forEach(a=>{cnt[a.servizio]=(cnt[a.servizio]||0)+1;});
+  const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+  const sDiv=document.getElementById('serviziStats');
+  if(!sorted.length){sDiv.innerHTML='<div class="text-mid">Nessun dato ancora</div>';return;}
+  const max=sorted[0][1];
+  sDiv.innerHTML=sorted.map(([s,n])=>`
+    <div style="margin-bottom:12px">
+      <div class="flex-between" style="margin-bottom:4px">
+        <span style="font-size:.83rem">${s}</span>
+        <span style="font-weight:700;color:var(--teal)">${n}</span>
+      </div>
+      <div style="background:var(--border);border-radius:10px;height:7px">
+        <div style="background:var(--grad);width:${(n/max)*100}%;height:7px;border-radius:10px"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== MODAL =====
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function apriModificaCliente(id){
+  document.getElementById('clienteInfo_'+id).style.display='none';
+  document.getElementById('clienteEdit_'+id).style.display='block';
+}
+
+function annullaModificaCliente(id){
+  document.getElementById('clienteInfo_'+id).style.display='block';
+  document.getElementById('clienteEdit_'+id).style.display='none';
+}
+
+function salvaModificaCliente(id){
+  const nome=document.getElementById('editCNome').value.trim();
+  if(!nome){alert('Il nome è obbligatorio!');return;}
+  const idx=clienti.findIndex(c=>c.id===id);
+  if(idx<0)return;
+  clienti[idx].nome=nome;
+  clienti[idx].cognome=document.getElementById('editCCognome').value.trim();
+  clienti[idx].telefono=document.getElementById('editCTel').value.trim();
+
+  clienti[idx].note=document.getElementById('editCNote').value.trim();
+  save();
+  closeModal('clienteModal');
+  renderClienti();
+  populateClienteSelect();
+}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+});
+
+// ===== LOGIN =====
+const NICK = 'BeautyjewelDJ';
+const PASS = 'DaelBJ1511*';
+
+function checkLogin(){
+  // localStorage mantiene la sessione finché non esci manualmente
+  const ok = localStorage.getItem('bj_auth') === 'ok';
+  if(ok){
+    document.getElementById('loginOverlay').style.display = 'none';
+  }
+}
+
+function doLogin(){
+  const nick = document.getElementById('loginNick').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  const err = document.getElementById('loginError');
+  if(nick === NICK && pass === PASS){
+    localStorage.setItem('bj_auth','ok');
+    document.getElementById('loginOverlay').style.display = 'none';
+    err.style.display = 'none';
+  } else {
+    err.style.display = 'block';
+    document.getElementById('loginPass').value = '';
+  }
+}
+
+function doLogout(){
+  if(!confirm('Vuoi disconnetterti?')) return;
+  localStorage.removeItem('bj_auth');
+  document.getElementById('loginNick').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginOverlay').style.display = 'flex';
+}
+
+// ===== CALENDARIO AGENDA (3 VISTE) =====
+var calVista = 'giorno';
+var calData = new Date(); // data corrente visualizzata
+
+function switchCalView(v, btn) {
+  calVista = v;
+  document.querySelectorAll('.view-toggle-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('vistaGiorno').style.display = v==='giorno' ? 'block' : 'none';
+  document.getElementById('vistaSettimana').style.display = v==='settimana' ? 'block' : 'none';
+  document.getElementById('vistaMese').style.display = v==='mese' ? 'block' : 'none';
+  document.getElementById('meseDayDetail').style.display = 'none';
+  renderCal();
+}
+
+function tornaOggi() {
+  calData = new Date();
+  renderCal();
+}
+
+function navCal(dir) {
+  if(calVista === 'giorno') calData.setDate(calData.getDate() + dir);
+  else if(calVista === 'settimana') calData.setDate(calData.getDate() + dir*7);
+  else calData.setMonth(calData.getMonth() + dir);
+  renderCal();
+}
+
+function renderCal() {
+  if(calVista === 'giorno') renderGiorno();
+  else if(calVista === 'settimana') renderSettimana();
+  else renderMese();
+  renderPendingBox();
+}
+
+function dateStr(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function isSameDay(d1,d2) {
+  return d1.getFullYear()===d2.getFullYear()&&d1.getMonth()===d2.getMonth()&&d1.getDate()===d2.getDate();
+}
+
+function apptCardCal(a, dateS) {
+  var cl = getCliente(a.clienteId);
+  var nome = cl ? cl.nome+' '+cl.cognome : 'Cliente';
+  var fine = a.durata && a.ora ? addMinutes(a.ora, a.durata) : '';
+  var extraTxt = a.extra && a.extra.length ? ' + '+a.extra.map(function(e){return e.nome;}).join(', ') : '';
+  var div = document.createElement('div');
+  div.className = 'appt-card';
+  div.style.marginBottom = '8px';
+  var inner = '<div class="appt-info">'+
+    '<div class="appt-name">'+nome+'</div>'+
+    '<div class="appt-service">'+a.servizio+extraTxt+'</div>'+
+    '<div class="appt-time">'+a.ora+(fine?' → '+fine:'')+(a.durata?' · '+durataLeggibile(a.durata):'')+'</div>'+
+    (a.note?'<div class="text-mid mt-8">'+a.note+'</div>':'')+
+  '</div>'+
+  '<div class="appt-actions"></div>';
+  div.innerHTML = inner;
+  var actions = div.querySelector('.appt-actions');
+  var btnEdit = document.createElement('button');
+  btnEdit.className = 'btn btn-warning btn-sm';
+  btnEdit.textContent = '✏️';
+  btnEdit.onclick = function(){ apriModifica(a.id); };
+  var btnDel = document.createElement('button');
+  btnDel.className = 'btn btn-danger btn-sm';
+  btnDel.textContent = '🗑';
+  btnDel.onclick = function(){ eliminaAppuntamentoData(a.id, dateS); };
+  actions.appendChild(btnEdit);
+  actions.appendChild(btnDel);
+  return div.outerHTML;
+}
+
+
+
+function bloccoCardCal(b) {
+  var div = document.createElement('div');
+  div.className = 'blocco-card';
+  div.style.marginBottom = '8px';
+  div.innerHTML = '<div class="appt-info"><div class="blocco-label">🚫 '+b.motivo+'</div><div class="appt-time">'+(b.tipo==='fascia'?b.dalle+' → '+b.alle:'Giornata intera')+'</div></div><div></div>';
+  var btnDel = document.createElement('button');
+  btnDel.className = 'btn btn-danger btn-sm';
+  btnDel.textContent = '🗑';
+  btnDel.onclick = function(){ eliminaBlocco(b.id); };
+  div.querySelector('div:last-child').appendChild(btnDel);
+  return div.outerHTML;
+}
+
+
+
+// VISTA GIORNO
+function renderGiorno() {
+  var d = calData;
+  var ds = dateStr(d);
+  var giorni = ['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+  var mesi = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+  var isToday = isSameDay(d, new Date());
+  var dow = d.getDay();
+
+  // Orari in base al giorno
+  var orariGiorno = ORARI_PER_GIORNO[dow] || [];
+  // Per la vista giorno mostriamo sempre 9-15 (o 9-18 il sabato) come griglia visiva
+  var oraInizio = 9;
+  var oraFine = (dow === 6) ? 18 : 15;
+  // Se giorno chiuso mostriamo comunque gli appuntamenti esistenti
+  var slots = [];
+  for(var h = oraInizio; h < oraFine; h++) {
+    slots.push(String(h).padStart(2,'0')+':00');
+    slots.push(String(h).padStart(2,'0')+':30');
+  }
+
+  // Nav title
+  var navTitle = document.getElementById('calNavTitle');
+  navTitle.textContent = giorni[dow]+' '+d.getDate()+' '+mesi[d.getMonth()]+' '+d.getFullYear()+(isToday?' · Oggi':'');
+  var existing = document.getElementById('calAddBtn');
+  if(existing) existing.remove();
+
+  var appts = appuntamenti.filter(function(a){return a.data===ds;});
+  var blks = blocchi.filter(function(b){return b.data===ds;});
+  var chiusi = [0,1,2];
+  var isChiuso = chiusi.indexOf(dow) >= 0;
+
+  var div = document.getElementById('giornoAppts');
+  div.innerHTML = '';
+
+  // Linea "ora corrente" se oggi
+  var nowMin = -1;
+  if(isToday) {
+    var now = new Date();
+    nowMin = now.getHours()*60 + now.getMinutes();
+  }
+
+  // Giorno chiuso banner
+  if(isChiuso) {
+    var banner = document.createElement('div');
+    banner.className = 'info-box info-yellow';
+    banner.style.marginBottom = '10px';
+    banner.textContent = 'Giorno chiuso — Lun/Mar/Dom non lavorativi';
+    div.appendChild(banner);
+  }
+
+  // Controlla blocco giornata intera
+  var bloccoGiorno = blks.find(function(b){return b.tipo==='giorno';});
+  if(bloccoGiorno) {
+    var bb = document.createElement('div');
+    bb.className = 'time-blocco-chip';
+    bb.style.marginBottom = '10px';
+    bb.innerHTML = '🚫 '+bloccoGiorno.motivo+' — Giornata intera';
+    div.appendChild(bb);
+  }
+
+  // Griglia oraria
+  var grid = document.createElement('div');
+  grid.className = 'time-grid card';
+  grid.style.padding = '8px 10px';
+  grid.style.position = 'relative';
+
+  // Calcola posizione linea ora corrente
+  var nowLineAdded = false;
+
+  slots.forEach(function(slot, idx) {
+    var slotMin = oraToMin(slot);
+    var slotFine = slotMin + 30;
+
+    // Appuntamento in questo slot
+    var apptInSlot = appts.find(function(a){
+      var aS = oraToMin(a.ora);
+      return aS === slotMin;
+    });
+
+    // Appuntamento che continua in questo slot (non inizia qui)
+    var apptContinue = appts.find(function(a){
+      var aS = oraToMin(a.ora);
+      var aF = aS + (a.durata||60);
+      return slotMin > aS && slotMin < aF;
+    });
+
+    // Blocco fascia
+    var bloccoFascia = blks.find(function(b){
+      if(b.tipo!=='fascia') return false;
+      var bS = oraToMin(b.dalle);
+      var bF = oraToMin(b.alle);
+      return slotMin >= bS && slotMin < bF;
+    });
+
+    var row = document.createElement('div');
+    row.className = 'time-slot';
+
+    // Linea ora corrente
+    if(isToday && !nowLineAdded && nowMin >= slotMin && nowMin < slotFine) {
+      var pct = ((nowMin - slotMin) / 30) * 100;
+      var nowLine = document.createElement('div');
+      nowLine.className = 'time-now-line';
+      nowLine.style.top = pct + '%';
+      var nowDot = document.createElement('div');
+      nowDot.className = 'time-now-dot';
+      nowDot.style.top = 'calc('+pct+'% - 4px)';
+      row.appendChild(nowLine);
+      row.appendChild(nowDot);
+      nowLineAdded = true;
+    }
+
+    var label = document.createElement('div');
+    label.className = 'time-label';
+    label.textContent = slot.endsWith(':00') ? slot : '';
+    row.appendChild(label);
+
+    var cell = document.createElement('div');
+    cell.className = 'time-content';
+
+    if(apptContinue) {
+      // slot occupato da appuntamento che continua — mostra solo riga sottile
+      cell.style.background = 'rgba(58,181,198,0.08)';
+      cell.style.borderLeft = '3px solid var(--teal)';
+      cell.style.cursor = 'default';
+    } else if(apptInSlot) {
+      cell.classList.add('has-appt');
+      var cl = getCliente(apptInSlot.clienteId);
+      var nome = cl ? cl.nome+' '+cl.cognome : 'Cliente';
+      var fine = apptInSlot.durata ? addMinutes(apptInSlot.ora, apptInSlot.durata) : '';
+      var extraTxt = apptInSlot.extra&&apptInSlot.extra.length?' + '+apptInSlot.extra.map(function(e){return e.nome;}).join(', '):'';
+      var chip = document.createElement('div');
+      chip.className = 'time-appt-chip';
+      chip.innerHTML = '<div class="time-appt-chip-info">'+
+        '<div class="time-appt-chip-name">'+nome+'</div>'+
+        '<div class="time-appt-chip-service">'+apptInSlot.servizio+extraTxt+(fine?' → '+fine:'')+'</div>'+
+      '</div>'+
+      '<div class="time-appt-chip-actions"></div>';
+      var btnE = document.createElement('button');
+      btnE.className = 'btn btn-sm';
+      btnE.style.cssText = 'background:rgba(255,255,255,.25);color:#fff;padding:3px 7px;font-size:.7rem';
+      btnE.textContent = '✏️';
+      btnE.onclick = function(){ apriModifica(apptInSlot.id); };
+      var btnD = document.createElement('button');
+      btnD.className = 'btn btn-sm';
+      btnD.style.cssText = 'background:rgba(255,255,255,.2);color:#fff;padding:3px 7px;font-size:.7rem';
+      btnD.textContent = '🗑';
+      btnD.onclick = function(){ eliminaAppuntamentoData(apptInSlot.id, ds); };
+      chip.querySelector('.time-appt-chip-actions').appendChild(btnE);
+      chip.querySelector('.time-appt-chip-actions').appendChild(btnD);
+      cell.appendChild(chip);
+    } else if(bloccoFascia) {
+      cell.classList.add('blocked');
+      var bchip = document.createElement('div');
+      bchip.className = 'time-blocco-chip';
+      bchip.textContent = '🚫 '+bloccoFascia.motivo;
+      cell.appendChild(bchip);
+    } else if(!bloccoGiorno && !isChiuso) {
+      // Slot libero — cliccabile
+      var hint = document.createElement('div');
+      hint.className = 'time-add-hint';
+      hint.textContent = '+ Aggiungi';
+      cell.appendChild(hint);
+      cell.onclick = function() {
+        document.getElementById('newData').value = ds;
+        document.getElementById('newOra').value = slot;
+        onDataChange();
+        // Preseleziona l'ora dopo che gli slot sono caricati
+        setTimeout(function(){
+          selezionaOraNew(slot);
+        }, 100);
+        document.querySelectorAll('.nav-btn')[1].click();
+      };
+    }
+
+    row.appendChild(cell);
+    grid.appendChild(row);
+  });
+
+  div.appendChild(grid);
+}
+
+
+
+// VISTA SETTIMANA
+function renderSettimana() {
+  var d = new Date(calData);
+  var dow = d.getDay();
+  var lunedi = new Date(d);
+  lunedi.setDate(d.getDate() - (dow===0?6:dow-1));
+  var mesi = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+  var giorni = ['Lu','Ma','Me','Gi','Ve','Sa','Do'];
+  var oggi = new Date(); oggi.setHours(0,0,0,0);
+  // Title
+  var dom = new Date(lunedi); dom.setDate(lunedi.getDate()+6);
+  document.getElementById('calNavTitle').textContent = lunedi.getDate()+' '+mesi[lunedi.getMonth()]+' – '+dom.getDate()+' '+mesi[dom.getMonth()]+' '+dom.getFullYear();
+  var html = '';
+  for(var i=0;i<7;i++) {
+    var day = new Date(lunedi); day.setDate(lunedi.getDate()+i);
+    var ds = dateStr(day);
+    var isT = isSameDay(day, oggi);
+    var appts = appuntamenti.filter(function(a){return a.data===ds;}).sort(function(a,b){return a.ora.localeCompare(b.ora);});
+    var blks = blocchi.filter(function(b){return b.data===ds;});
+    html += '<div class="week-col">';
+    html += '<div class="week-col-header'+(isT?' today-col':'')+'"><span>'+giorni[i]+' '+day.getDate()+'/'+String(day.getMonth()+1).padStart(2,'0')+'</span>'+(isT?'<span>Oggi</span>':'')+'</div>';
+    html += '<div class="week-col-body">';
+    if(!appts.length && !blks.length) {
+      html += '<div class="week-empty">—</div>';
+    } else {
+      blks.forEach(function(b){ html += '<div class="week-blocco">🚫 '+b.motivo+(b.tipo==='fascia'?' ('+b.dalle+'–'+b.alle+')':'')+'</div>'; });
+      appts.forEach(function(a){
+        var cl = getCliente(a.clienteId);
+        var nome = cl ? cl.nome : 'Cliente';
+        var wDiv = document.createElement('div');
+        wDiv.className = 'week-appt';
+        wDiv.innerHTML = '<div class="week-appt-name">'+a.ora+' '+nome+'</div><div class="week-appt-info">'+a.servizio+'</div>';
+        wDiv.setAttribute('data-ds', ds);
+        wDiv.onclick = function(){ calData=new Date(this.getAttribute('data-ds')+'T12:00:00'); switchCalView('giorno',document.querySelectorAll('.view-toggle-btn')[0]); };
+        html += wDiv.outerHTML;
+      });
+    }
+    html += '</div></div>';
+  }
+  document.getElementById('settimanaGrid').innerHTML = html;
+}
+
+// VISTA MESE
+function renderMese() {
+  var mesi = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  var d = calData;
+  document.getElementById('calNavTitle').textContent = mesi[d.getMonth()]+' '+d.getFullYear();
+  var primoGiorno = new Date(d.getFullYear(), d.getMonth(), 1);
+  var giorniMese = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+  var startDay = primoGiorno.getDay()-1; if(startDay<0) startDay=6;
+  var oggi = new Date(); oggi.setHours(0,0,0,0);
+  var chiusi = [0,1,2]; // dom, lun, mar
+  var container = document.getElementById('meseGrid');
+  container.innerHTML = '';
+
+  for(var i=0;i<startDay;i++){
+    var empty = document.createElement('div');
+    empty.className = 'cal-cell cal-empty';
+    container.appendChild(empty);
+  }
+
+  for(var g=1;g<=giorniMese;g++){
+    var ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(g).padStart(2,'0');
+    var dayDate = new Date(d.getFullYear(), d.getMonth(), g);
+    var isT = isSameDay(dayDate, oggi);
+    var dow = dayDate.getDay();
+    var isChiuso = chiusi.indexOf(dow) >= 0;
+    var appts = appuntamenti.filter(function(a){return a.data===ds;});
+    var blks = blocchi.filter(function(b){return b.data===ds;});
+    var hasBloccoGiorno = blks.some(function(b){return b.tipo==='giorno';});
+    var hasBloccoFascia = blks.some(function(b){return b.tipo==='fascia';});
+
+    var cell = document.createElement('div');
+    cell.className = 'cal-cell'+(isT?' cal-today':'')+(isChiuso?' cal-chiuso':'');
+    if(isChiuso) cell.style.background = '#fff0f0';
+
+    var dotsHtml = '';
+    if(hasBloccoGiorno) dotsHtml += '<div class="cal-dot" style="background:#ef4444;width:8px;height:8px"></div>';
+    else if(hasBloccoFascia) dotsHtml += '<div class="cal-dot" style="background:#f97316;width:8px;height:8px"></div>';
+    appts.slice(0,3).forEach(function(){ dotsHtml += '<div class="cal-dot"></div>'; });
+
+    var dayNumStyle = isChiuso ? 'style="color:#ef4444;text-decoration:line-through"' : '';
+    cell.innerHTML = '<div class="cal-day-num" '+dayNumStyle+'>'+g+'</div><div class="cal-dots">'+dotsHtml+'</div>';
+    cell.setAttribute('data-ds', ds);
+    cell.onclick = function(){ apriMeseGiorno(this.getAttribute('data-ds')); };
+    container.appendChild(cell);
+  }
+}
+
+
+
+function apriMeseGiorno(ds) {
+  var detail = document.getElementById('meseDayDetail');
+  detail.style.display = 'block';
+  var appts = appuntamenti.filter(function(a){return a.data===ds;}).sort(function(a,b){return a.ora.localeCompare(b.ora);});
+  var blks = blocchi.filter(function(b){return b.data===ds;});
+  var giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+  var d = new Date(ds+'T12:00:00');
+  detail.innerHTML = '';
+  var header = document.createElement('div');
+  header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:10px';
+  header.innerHTML = '<div class="cal-day-detail-title" style="margin-bottom:0">'+giorni[d.getDay()]+' '+formatDate(ds)+'</div>';
+  var btnAdd = document.createElement('button');
+  btnAdd.className = 'btn btn-primary btn-sm';
+  btnAdd.textContent = '+ Nuovo';
+  btnAdd.onclick = function(){
+    document.getElementById('newData').value = ds;
+    onDataChange();
+    document.querySelectorAll('.nav-btn')[1].click();
+  };
+  header.appendChild(btnAdd);
+  detail.appendChild(header);
+  if(!appts.length && !blks.length){
+    var empty = document.createElement('div');
+    empty.className = 'text-mid';
+    empty.textContent = 'Nessun appuntamento';
+    detail.appendChild(empty);
+  }
+  blks.forEach(function(b){ detail.insertAdjacentHTML('beforeend', bloccoCardCal(b)); });
+  appts.forEach(function(a){ detail.insertAdjacentHTML('beforeend', apptCardCal(a, ds)); });
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function eliminaAppuntamentoData(id, ds) {
+  var a = appuntamenti.find(function(x){return x.id===id;});
+  if(!a) return;
+  var cl = getCliente(a.clienteId);
+  var nome = cl ? cl.nome : 'la cliente';
+  if(!confirm('Cancellare l appuntamento di '+nome+'?')) return;
+  appuntamenti = appuntamenti.filter(function(x){return x.id!==id;});
+  save();
+  renderCal();
+  if(calVista==='mese') apriMeseGiorno(ds);
+  if(cl && cl.telefono) {
+    var tel = cl.telefono.replace(/[^0-9]/g,'');
+    var msg = 'Ciao '+cl.nome+'!\nPurtroppo devo cancellare il tuo appuntamento del '+formatDate(a.data)+' alle '+a.ora+'.\nContattami per fissarne uno nuovo!\n- Katia, Beauty Jewel';
+    if(confirm('Vuoi avvisare '+cl.nome+' su WhatsApp?')) {
+      window.open('https://wa.me/39'+tel+'?text='+encodeURIComponent(msg),'_blank');
+    }
+  }
+}
+
+function renderPendingBox() {
+  var pending = richiestePrenotazione.filter(function(r){return r.stato==='pending';});
+  var box = document.getElementById('pendingBox');
+  if(!pending.length){box.innerHTML='';return;}
+  var div = document.createElement('div');
+  div.className = 'card info-yellow';
+  div.style.marginBottom = '12px';
+  var html = '<p><strong>'+pending.length+' richiesta'+(pending.length>1?'e':'')+' in attesa</strong></p>';
+  pending.forEach(function(r){
+    html += '<div style="padding:8px 0;border-bottom:1px solid #fde68a;display:flex;justify-content:space-between;align-items:center">'+
+      '<div><strong>'+r.nome+' '+r.cognome+'</strong><br><span style="font-size:.78rem">'+r.servizio+' · '+formatDate(r.data)+' '+r.ora+'</span></div>'+
+      '<div style="display:flex;gap:6px" data-rid="'+r.id+'">'+
+        '<button class="btn btn-primary btn-sm">✓</button>'+
+        '<button class="btn btn-danger btn-sm">✕</button>'+
+      '</div>'+
+    '</div>';
+  });
+  div.innerHTML = html;
+  div.querySelectorAll('[data-rid]').forEach(function(actDiv){
+    var rid = actDiv.getAttribute('data-rid');
+    actDiv.querySelector('.btn-primary').onclick = function(){ accettaRichiesta(rid); };
+    actDiv.querySelector('.btn-danger').onclick = function(){ rifiutaRichiesta(rid); };
+  });
+  box.innerHTML = '';
+  box.appendChild(div);
+}
+
+
+
+// ===== BLOCCHI =====
+function onBloccoTipoChange(){
+  document.getElementById('bloccoFasciaFields').style.display=
+    document.getElementById('bloccoTipo').value==='fascia'?'block':'none';
+}
+
+function salvaBlocco(){
+  const data=document.getElementById('bloccoData').value;
+  const tipo=document.getElementById('bloccoTipo').value;
+  const motivo=document.getElementById('bloccoMotivo').value.trim()||'Non disponibile';
+  if(!data){alert('Scegli una data!');return;}
+  let dalle='00:00', alle='23:59';
+  if(tipo==='fascia'){
+    dalle=document.getElementById('bDalle').value;
+    alle=document.getElementById('bAlle').value;
+    if(!dalle||!alle){alert('Inserisci orario di inizio e fine!');return;}
+  }
+  blocchi.push({id:Date.now().toString(),data,dalle,alle,tipo,motivo});
+  save();
+  // reset
+  document.getElementById('bloccoData').value='';
+  document.getElementById('bloccoMotivo').value='';
+  document.getElementById('bDalle')&&(document.getElementById('bDalle').value='');
+  document.getElementById('bAlle')&&(document.getElementById('bAlle').value='');
+  alert('✅ Disponibilità bloccata!');
+  document.querySelectorAll('.nav-btn')[0].click();
+}
+
+function eliminaBlocco(id){
+  if(!confirm('Rimuovere questo blocco?'))return;
+  blocchi=blocchi.filter(b=>b.id!==id);
+  save();
+  renderAgenda(currentFilter);
+}
+
+// ===== GOOGLE CALENDAR =====
+function apriGoogleCalendar(a){
+  try {
+    var cl = getCliente(a.clienteId);
+    var nome = cl ? cl.nome + ' ' + cl.cognome : 'Cliente';
+    var extraTxt = a.extra && a.extra.length ? ' + ' + a.extra.map(function(e){return e.nome;}).join(', ') : '';
+    var titolo = encodeURIComponent('Appuntamento ' + nome + ' - ' + a.servizio + extraTxt);
+    var descr = encodeURIComponent('Cliente: ' + nome + '\nServizio: ' + a.servizio + extraTxt + '\nDurata: ' + (a.durata ? durataLeggibile(a.durata) : '') + (cl && cl.telefono ? '\nWhatsApp: ' + cl.telefono : '') + (a.note ? '\nNote: ' + a.note : ''));
+    var parts = a.data.split('-');
+    var y = parts[0], m = parts[1], g = parts[2];
+    var timeParts = a.ora.split(':');
+    var h = timeParts[0], min = timeParts[1];
+    var start = y + m + g + 'T' + h + min + '00';
+    var durMin = a.durata || 60;
+    var fineDate = new Date(parseInt(y), parseInt(m)-1, parseInt(g), parseInt(h), parseInt(min) + durMin);
+    var fh = String(fineDate.getHours()).padStart(2,'0');
+    var fm = String(fineDate.getMinutes()).padStart(2,'0');
+    var fd = String(fineDate.getDate()).padStart(2,'0');
+    var fm2 = String(fineDate.getMonth()+1).padStart(2,'0');
+    var fy = fineDate.getFullYear();
+    var end = fy + fm2 + fd + 'T' + fh + fm + '00';
+    var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + titolo + '&dates=' + start + '/' + end + '&details=' + descr + '&reminder=1440';
+    window.open(url, '_blank');
+  } catch(e) { alert('Errore apertura calendario: ' + e.message); }
+}
+
+// ===== INIT =====
+checkLogin();
+renderCal();
+populateClienteSelect();
+populateServizi('new');
+populateServizi('p');
+</script>
+</body>
+</html>
