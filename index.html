@@ -326,6 +326,7 @@ const GIORNI_CHIUSI = [0, 1, 2];
 // Appuntamenti già occupati — Katia aggiorna questa lista manualmente
 // oppure in futuro si può collegare a un database
 let OCCUPATI = JSON.parse(localStorage.getItem('bj_appuntamenti')||'[]');
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQlq063E-gGRS9Id2GP1IND0FgkCu_1OYdOCEMZiOnEb1RpeO7ogU36BrFNp6082DSMA/exec';
 let BLOCCHI = JSON.parse(localStorage.getItem('bj_blocchi')||'[]');
 
 // ===== STATO =====
@@ -555,17 +556,25 @@ function inviaRichiesta(){
     (note?`📝 Note: ${note}\n`:'')+
     `\nAspetto conferma, grazie! 😊`;
 
-  // Salva in localStorage per l'app principale
-  const richieste=JSON.parse(localStorage.getItem('bj_richieste')||'[]');
-  richieste.push({
+  // Salva in localStorage
+  const nuovaRich = {
     id:Date.now().toString(), stato:'pending',
     nome:stato.nome, cognome:stato.cognome,
     telefono:stato.tel,
     servizio:stato.servizio.nome, extra:stato.extra,
-    durata:stato.durata, data:stato.data, ora:stato.ora, note
-  });
+    durata:stato.durata, data:stato.data, ora:stato.ora, note:note
+  };
+  const richieste=JSON.parse(localStorage.getItem('bj_richieste')||'[]');
+  richieste.push(nuovaRich);
   localStorage.setItem('bj_richieste',JSON.stringify(richieste));
   localStorage.setItem('bj_wa_msg',msg);
+  // Invia a Google Sheets (vera sincronizzazione tra dispositivi)
+  fetch(SCRIPT_URL, {
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(Object.assign({tipo:'prenotazione'}, nuovaRich))
+  }).catch(function(){});
 
   document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
   document.getElementById('stepSuccess').classList.add('active');

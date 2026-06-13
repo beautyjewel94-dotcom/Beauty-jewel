@@ -1391,8 +1391,11 @@ function accettaRichiesta(id){
 
 function rifiutaRichiesta(id){
   if(!confirm('Rifiutare questa richiesta?'))return;
-  richiestePrenotazione=richiestePrenotazione.filter(x=>x.id!==id);
-  save();renderAgenda(currentFilter);
+  richiestePrenotazione=richiestePrenotazione.filter(function(x){return x.id!==id;});
+  save();
+  renderCal();
+  renderPendingBox();
+  aggiornaStatoRemoto(id, 'Rifiutata');
 }
 
 // ===== STATS =====
@@ -1453,6 +1456,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
 });
 
 // ===== LOGIN =====
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQlq063E-gGRS9Id2GP1IND0FgkCu_1OYdOCEMZiOnEb1RpeO7ogU36BrFNp6082DSMA/exec';
 const NICK = 'BeautyjewelDJ';
 const PASS = 'DaelBJ1511*';
 
@@ -1991,9 +1995,57 @@ function apriGoogleCalendar(a){
   } catch(e) { alert('Errore apertura calendario: ' + e.message); }
 }
 
+// ===== CARICA RICHIESTE DA GOOGLE SHEETS =====
+function caricaRichiesteRemote(){
+  fetch(SCRIPT_URL + '?tipo=prenotazioni')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data.ok && data.data.length){
+        var aggiornate = false;
+        data.data.forEach(function(r){
+          var esiste = richiestePrenotazione.find(function(x){ return x.id === r['ID']; });
+          if(!esiste){
+            richiestePrenotazione.push({
+              id: r['ID'],
+              stato: 'pending',
+              nome: r['Nome'],
+              cognome: r['Cognome'],
+              telefono: r['Telefono'],
+              servizio: r['Servizio'],
+              extra: r['Extra'] ? r['Extra'].split(', ').map(function(n){ return {nome:n}; }) : [],
+              durata: parseInt(r['Durata'])||60,
+              data: r['Data'],
+              ora: r['Ora'],
+              note: r['Note']||''
+            });
+            aggiornate = true;
+          }
+        });
+        if(aggiornate){
+          save();
+          renderPendingBox();
+        }
+      }
+    })
+    .catch(function(){});
+}
+
+// Aggiorna stato su Google Sheets quando accetti/rifiuti
+function aggiornaStatoRemoto(id, stato){
+  fetch(SCRIPT_URL, {
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({tipo:'aggiorna_stato', id:id, stato:stato})
+  }).catch(function(){});
+}
+
 // ===== INIT =====
 checkLogin();
 renderCal();
+// Carica richieste remote ogni 30 secondi
+caricaRichiesteRemote();
+setInterval(caricaRichiesteRemote, 30000);
 populateClienteSelect();
 populateServizi('new');
 populateServizi('p');
