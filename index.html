@@ -470,7 +470,8 @@ function cambiaM(dir){
 }
 
 function selezionaData(dateStr){
-  stato.data=dateStr;
+  // Assicura formato YYYY-MM-DD corretto
+  stato.data=dateStr.substring(0,10);
   stato.ora='';
   renderCalendario();
   caricaOrari();
@@ -478,7 +479,7 @@ function selezionaData(dateStr){
 
 function caricaOrari(){
   const card=document.getElementById('orariCard');
-  const d=new Date(stato.data);
+  const d=new Date(stato.data+'T12:00:00');
   const dayOfWeek=d.getDay();
   const orariGiorno=ORARI_PER_GIORNO[dayOfWeek]||[];
   if(!orariGiorno.length){
@@ -528,7 +529,7 @@ function selezionaOrario(elOrOra){
 // ===== STEP 4: RIEPILOGO =====
 function renderRiepilogo(){
   const giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
-  const d=new Date(stato.data);
+  const d=new Date(stato.data+'T12:00:00');
   const fine=stato.ora?addMinutes(stato.ora,stato.durata):'';
   const extraTxt=stato.extra.length?stato.extra.map(e=>e.nome).join(', '):'—';
   document.getElementById('riepilogoBox').innerHTML=`
@@ -545,7 +546,7 @@ function renderRiepilogo(){
 function inviaRichiesta(){
   const note=document.getElementById('pNote').value.trim();
   const giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
-  const d=new Date(stato.data);
+  const d=new Date(stato.data+'T12:00:00');
   const fine=addMinutes(stato.ora,stato.durata);
   const extraTxt=stato.extra.length?' + '+stato.extra.map(e=>e.nome).join(', '):'';
   const msg=`Ciao Katia! 💅 Vorrei prenotare un appuntamento:\n\n`+
