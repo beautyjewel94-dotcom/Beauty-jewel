@@ -1999,33 +1999,62 @@ function apriGoogleCalendar(a){
 function caricaRichiesteRemote(){
   fetch(SCRIPT_URL + '?tipo=prenotazioni')
     .then(function(r){ return r.json(); })
-    .then(function(data){
-      if(data.ok && data.data.length){
-        var aggiornate = false;
-        data.data.forEach(function(r){
-          var esiste = richiestePrenotazione.find(function(x){ return x.id === r['ID']; });
-          if(!esiste){
-            richiestePrenotazione.push({
-              id: r['ID'],
-              stato: 'pending',
-              nome: r['Nome'],
-              cognome: r['Cognome'],
-              telefono: r['Telefono'],
-              servizio: r['Servizio'],
-              extra: r['Extra'] ? r['Extra'].split(', ').map(function(n){ return {nome:n}; }) : [],
-              durata: parseInt(r['Durata'])||60,
-              data: r['Data'],
-              ora: r['Ora'],
-              note: r['Note']||''
-            });
-            aggiornate = true;
+    .then(function(risposta){
+      if(!risposta.ok || !risposta.data || !risposta.data.length) return;
+      var aggiornate = false;
+      risposta.data.forEach(function(r){
+        var rid = String(r['ID']||'').trim();
+        if(!rid) return;
+        var esiste = richiestePrenotazione.find(function(x){ return x.id === rid; });
+        if(esiste) return;
+
+        // Pulisce data — gestisce tutti i formati possibili
+        var dataRaw = String(r['Data']||'').trim();
+        var dataPulita = '';
+        try {
+          if(dataRaw.match(/^\d{4}-\d{2}-\d{2}/)) {
+            // YYYY-MM-DD o YYYY-MM-DDThh:mm:ss.sssZ
+            dataPulita = dataRaw.substring(0,10);
+          } else if(dataRaw.match(/^\d{2}\/\d{2}\/\d{4}/)) {
+            // DD/MM/YYYY
+            var p = dataRaw.split('/');
+            dataPulita = p[2].substring(0,4)+'-'+p[1]+'-'+p[0];
+          } else if(dataRaw.indexOf('T') > -1) {
+            // qualsiasi formato ISO
+            var d = new Date(dataRaw);
+            if(!isNaN(d)) {
+              dataPulita = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+            }
+          } else {
+            dataPulita = dataRaw.substring(0,10);
           }
-        });
-        if(aggiornate){
-          save();
-          renderPendingBox();
+        } catch(e){ dataPulita = dataRaw.substring(0,10); }
+
+        // Pulisce ora — prende solo HH:MM
+        var oraRaw = String(r['Ora']||'').trim();
+        var oraPulita = oraRaw.replace(/[^0-9:]/g,'').substring(0,5);
+        if(oraPulita.length === 4 && oraPulita.indexOf(':') === -1){
+          oraPulita = oraPulita.substring(0,2)+':'+oraPulita.substring(2);
         }
-      }
+
+        richiestePrenotazione.push({
+          id: rid,
+          stato: 'pending',
+          nome: String(r['Nome']||'').trim(),
+          cognome: String(r['Cognome']||'').trim(),
+          telefono: String(r['Telefono']||'').trim(),
+          servizio: String(r['Servizio']||'').trim(),
+          extra: r['Extra'] && String(r['Extra']).trim()
+            ? String(r['Extra']).split(',').filter(Boolean).map(function(n){ return {nome:n.trim()}; })
+            : [],
+          durata: parseInt(r['Durata'])||60,
+          data: dataPulita,
+          ora: oraPulita,
+          note: String(r['Note']||'').trim()
+        });
+        aggiornate = true;
+      });
+      if(aggiornate){ save(); renderPendingBox(); renderCal(); }
     })
     .catch(function(){});
 }
