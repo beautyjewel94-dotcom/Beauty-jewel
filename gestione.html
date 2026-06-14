@@ -1481,28 +1481,25 @@ function apptCardCal(a, dateS) {
   var div = document.createElement('div');
   div.className = 'appt-card';
   div.style.marginBottom = '8px';
-  var inner = '<div class="appt-info">'+
+  div.innerHTML = '<div class="appt-info">'+
     '<div class="appt-name">'+nome+'</div>'+
     '<div class="appt-service">'+a.servizio+extraTxt+'</div>'+
-    '<div class="appt-time">'+a.ora+(fine?' → '+fine:'')+(a.durata?' · '+durataLeggibile(a.durata):'')+'</div>'+
+    '<div class="appt-time">'+a.ora+(fine?' → '+fine:'')+(a.durata?' · '+durataLeggibile(a.durata):'')+' </div>'+
     (a.note?'<div class="text-mid mt-8">'+a.note+'</div>':'')+
-  '</div>'+
-  '<div class="appt-actions"></div>';
-  div.innerHTML = inner;
+  '</div><div class="appt-actions"></div>';
   var actions = div.querySelector('.appt-actions');
   var btnEdit = document.createElement('button');
   btnEdit.className = 'btn btn-warning btn-sm';
   btnEdit.textContent = '✏️';
-  btnEdit.onclick = function(){ apriModifica(a.id); };
+  btnEdit.onclick = (function(aid){ return function(){ apriModifica(aid); }; })(a.id);
   var btnDel = document.createElement('button');
   btnDel.className = 'btn btn-danger btn-sm';
   btnDel.textContent = '🗑';
-  btnDel.onclick = function(){ eliminaAppuntamentoData(a.id, dateS); };
+  btnDel.onclick = (function(aid, ds){ return function(){ eliminaAppuntamentoData(aid, ds); }; })(a.id, dateS);
   actions.appendChild(btnEdit);
   actions.appendChild(btnDel);
-  return div.outerHTML;
+  return div; // restituisce elemento, non stringa
 }
-
 
 
 function bloccoCardCal(b) {
@@ -1513,11 +1510,10 @@ function bloccoCardCal(b) {
   var btnDel = document.createElement('button');
   btnDel.className = 'btn btn-danger btn-sm';
   btnDel.textContent = '🗑';
-  btnDel.onclick = function(){ eliminaBlocco(b.id); };
+  btnDel.onclick = (function(bid){ return function(){ eliminaBlocco(bid); }; })(b.id);
   div.querySelector('div:last-child').appendChild(btnDel);
-  return div.outerHTML;
+  return div; // restituisce elemento, non stringa
 }
-
 
 
 // VISTA GIORNO
@@ -1662,12 +1658,12 @@ function renderGiorno() {
       btnE.className = 'btn btn-sm';
       btnE.style.cssText = 'background:rgba(255,255,255,.25);color:#fff;padding:3px 7px;font-size:.7rem';
       btnE.textContent = '✏️';
-      btnE.onclick = function(){ apriModifica(apptInSlot.id); };
+      btnE.onclick = (function(aid){ return function(){ apriModifica(aid); }; })(apptInSlot.id);
       var btnD = document.createElement('button');
       btnD.className = 'btn btn-sm';
       btnD.style.cssText = 'background:rgba(255,255,255,.2);color:#fff;padding:3px 7px;font-size:.7rem';
       btnD.textContent = '🗑';
-      btnD.onclick = function(){ eliminaAppuntamentoData(apptInSlot.id, ds); };
+      btnD.onclick = (function(aid, ds2){ return function(){ eliminaAppuntamentoData(aid, ds2); }; })(apptInSlot.id, ds);
       chip.querySelector('.time-appt-chip-actions').appendChild(btnE);
       chip.querySelector('.time-appt-chip-actions').appendChild(btnD);
       cell.appendChild(chip);
@@ -1822,8 +1818,8 @@ function apriMeseGiorno(ds) {
     empty.textContent = 'Nessun appuntamento';
     detail.appendChild(empty);
   }
-  blks.forEach(function(b){ detail.insertAdjacentHTML('beforeend', bloccoCardCal(b)); });
-  appts.forEach(function(a){ detail.insertAdjacentHTML('beforeend', apptCardCal(a, ds)); });
+  blks.forEach(function(b){ detail.appendChild(bloccoCardCal(b)); });
+  appts.forEach(function(a){ detail.appendChild(apptCardCal(a, ds)); });
   detail.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
