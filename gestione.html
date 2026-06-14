@@ -735,16 +735,16 @@ function today(){ return new Date().toISOString().split('T')[0]; }
 function tomorrow(){ const d=new Date();d.setDate(d.getDate()+1);return d.toISOString().split('T')[0]; }
 function startOfWeek(){ const d=new Date();const day=d.getDay();const diff=d.getDate()-day+(day===0?-6:1);d.setDate(diff);return d.toISOString().split('T')[0]; }
 function endOfWeek(){ const d=new Date();const day=d.getDay();const diff=d.getDate()-day+(day===0?0:7);d.setDate(diff);return d.toISOString().split('T')[0]; }
-function formatDate(str){ if(!str)return''; const[y,m,g]=str.split('-');return`${g}/${m}/${y}`; }
+function formatDate(str){ if(!str)return''; var p=str.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
 function getCliente(id){ return clienti.find(c=>c.id===id); }
 function addMinutes(ora,min){
-  const[h,m]=ora.split(':').map(Number);
-  const tot=h*60+m+min;
-  return `${String(Math.floor(tot/60)).padStart(2,'0')}:${String(tot%60).padStart(2,'0')}`;
+  var parts=ora.split(':');
+  var tot=parseInt(parts[0])*60+parseInt(parts[1])+min;
+  return String(Math.floor(tot/60)).padStart(2,'0')+':'+String(tot%60).padStart(2,'0');
 }
 function oraToMin(ora){ const[h,m]=ora.split(':').map(Number);return h*60+m; }
-function minToOra(min){ return`${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`; }
-function durataLeggibile(min){ const h=Math.floor(min/60);const m=min%60;return h>0?(m>0?`${h}h ${m}min`:`${h}h`):`${m}min`; }
+function minToOra(min){ return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0'); }
+function durataLeggibile(min){ var h=Math.floor(min/60);var m=min%60;return h>0?(m>0?h+'h '+m+'min':h+'h'):m+'min'; }
 function getServizio(nome){ return SERVIZI.find(s=>s.nome===nome); }
 
 // ===== HEADER =====
@@ -810,17 +810,23 @@ function onServizioChange(ctx){
 
 function renderExtra(ctx,listId){
   const list=document.getElementById(listId);
-  list.innerHTML=EXTRA.map((e,i)=>`
-    <div class="extra-item" id="extra_${ctx}_${i}" onclick="toggleExtra('${ctx}',${i})">
-      <input type="checkbox" id="chk_${ctx}_${i}">
-      <span class="extra-label">${e.nome}</span>
-      <span class="extra-time">${e.label}</span>
-    </div>`).join('');
+  var container = document.getElementById(listId);
+  container.innerHTML = '';
+  EXTRA.forEach(function(e,i){
+    var div = document.createElement('div');
+    div.className = 'extra-item';
+    div.id = 'extra_'+ctx+'_'+i;
+    div.setAttribute('data-ctx', ctx);
+    div.setAttribute('data-idx', i);
+    div.onclick = function(){ toggleExtra(this.getAttribute('data-ctx'), parseInt(this.getAttribute('data-idx'))); };
+    div.innerHTML = '<input type="checkbox" id="chk_'+ctx+'_'+i+'"><span class="extra-label">'+e.nome+'</span><span class="extra-time">'+e.label+'</span>';
+    container.appendChild(div);
+  });
 }
 
 function toggleExtra(ctx,i){
-  const chk=document.getElementById(`chk_${ctx}_${i}`);
-  const item=document.getElementById(`extra_${ctx}_${i}`);
+  var chk=document.getElementById('chk_'+ctx+'_'+i);
+  var item=document.getElementById('extra_'+ctx+'_'+i);
   chk.checked=!chk.checked;
   item.classList.toggle('selected',chk.checked);
   aggiornaFineStimata(ctx);
@@ -829,7 +835,7 @@ function toggleExtra(ctx,i){
 
 function getSelectedExtra(ctx){
   return EXTRA.map((e,i)=>{
-    const chk=document.getElementById(`chk_${ctx}_${i}`);
+    var chk=document.getElementById('chk_'+ctx+'_'+i);
     return chk&&chk.checked?e:null;
   }).filter(Boolean);
 }
@@ -940,16 +946,16 @@ function eliminaAppuntamento(id){
   if(!a)return;
   const cl=getCliente(a.clienteId);
   const nome=cl?cl.nome:'la cliente';
-  if(!confirm(`Cancellare l'appuntamento di ${nome} del ${formatDate(a.data)} alle ${a.ora}?`))return;
+  if(!confirm('Cancellare l appuntamento di '+nome+' del '+formatDate(a.data)+' alle '+a.ora+'?'))return;
   appuntamenti=appuntamenti.filter(x=>x.id!==id);
   save();
   renderCal();
   // Proponi di avvisare la cliente su WhatsApp
   if(cl&&cl.telefono){
     const tel=cl.telefono.replace(/\D/g,'');
-    const msg=`Ciao ${cl.nome}! 💅\nPurtroppo devo cancellare il tuo appuntamento del ${formatDate(a.data)} alle ${a.ora}.\nContattami per fissarne uno nuovo!\n— Katia, Beauty Jewel`;
+    var msg='Ciao '+cl.nome+'!\nPurtroppo devo cancellare il tuo appuntamento del '+formatDate(a.data)+' alle '+a.ora+'.\nContattami per fissarne uno nuovo!\n- Katia, Beauty Jewel';
     if(confirm('Vuoi avvisare la cliente su WhatsApp?')){
-      window.open(`https://wa.me/39${tel}?text=${encodeURIComponent(msg)}`,'_blank');
+      window.open('https://wa.me/39'+tel+'?text='+encodeURIComponent(msg),'_blank');
     }
   }
 }
@@ -1042,8 +1048,8 @@ function apriModifica(id){
       if(a.extra) a.extra.forEach(ex=>{
         const i=EXTRA.findIndex(e=>e.nome===ex.nome);
         if(i>=0){
-          const chk=document.getElementById(`chk_edit_${i}`);
-          const item=document.getElementById(`extra_edit_${i}`);
+          var chk=document.getElementById('chk_edit_'+i);
+          var item=document.getElementById('extra_edit_'+i);
           if(chk){chk.checked=true;item.classList.add('selected');}
         }
       });
@@ -1113,40 +1119,66 @@ function renderClienti(){
 
 
 function openCliente(id){
-  const c=getCliente(id);if(!c)return;
-  document.getElementById('modalClienteNome').textContent=c.nome+' '+c.cognome;
-  const storico=appuntamenti.filter(a=>a.clienteId===id).sort((a,b)=>b.data.localeCompare(a.data));
-  document.getElementById('modalClienteBody').innerHTML=`
-    <div id="clienteInfo_${id}">
-      <div class="text-mid">📱 ${c.telefono||'—'}</div>
+  var c = getCliente(id);
+  if(!c) return;
+  document.getElementById('modalClienteNome').textContent = c.nome+' '+c.cognome;
+  var storico = appuntamenti.filter(function(a){return a.clienteId===id;}).sort(function(a,b){return b.data.localeCompare(a.data);});
+  var body = document.getElementById('modalClienteBody');
+  body.innerHTML = '';
 
-      ${c.note?`<div class="text-mid mt-8">📝 ${c.note}</div>`:''}
-      <div class="divider"></div>
-      <div style="font-weight:700;margin-bottom:10px">Storico visite (${storico.length})</div>
-      ${storico.length?storico.map(a=>`
-        <div class="storico-item">
-          <span>${formatDate(a.data)} ${a.ora}</span>
-          <span style="color:var(--teal-dark);font-weight:700">${a.servizio}</span>
-        </div>`).join(''):'<div class="text-mid">Nessuna visita</div>'}
-      <div class="divider"></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary btn-sm" onclick="apriModificaCliente('${id}')">✏️ Modifica</button>
-        <button class="btn btn-danger btn-sm" onclick="eliminaCliente('${id}')">🗑 Elimina</button>
-      </div>
-    </div>
-    <div id="clienteEdit_${id}" style="display:none">
-      <div class="form-group"><label>Nome *</label><input type="text" id="editCNome" value="${c.nome}"></div>
-      <div class="form-group"><label>Cognome</label><input type="text" id="editCCognome" value="${c.cognome||''}"></div>
-      <div class="form-group"><label>WhatsApp</label><input type="tel" id="editCTel" value="${c.telefono||''}"></div>
+  // Info section
+  var info = document.createElement('div');
+  info.id = 'clienteInfo_'+id;
+  var infoHtml = '<div class="text-mid">📱 '+(c.telefono||'—')+'</div>';
+  if(c.note) infoHtml += '<div class="text-mid mt-8">📝 '+c.note+'</div>';
+  infoHtml += '<div class="divider"></div>';
+  infoHtml += '<div style="font-weight:700;margin-bottom:10px">Storico visite ('+storico.length+')</div>';
+  if(storico.length){
+    storico.forEach(function(a){
+      infoHtml += '<div class="storico-item"><span>'+formatDate(a.data)+' '+a.ora+'</span><span style="color:var(--teal-dark);font-weight:700">'+a.servizio+'</span></div>';
+    });
+  } else {
+    infoHtml += '<div class="text-mid">Nessuna visita</div>';
+  }
+  infoHtml += '<div class="divider"></div><div style="display:flex;gap:8px"></div>';
+  info.innerHTML = infoHtml;
+  var btnMod = document.createElement('button');
+  btnMod.className = 'btn btn-secondary btn-sm';
+  btnMod.textContent = '✏️ Modifica';
+  btnMod.onclick = function(){ apriModificaCliente(id); };
+  var btnDel = document.createElement('button');
+  btnDel.className = 'btn btn-danger btn-sm';
+  btnDel.textContent = '🗑 Elimina';
+  btnDel.onclick = function(){ eliminaCliente(id); };
+  info.querySelector('div:last-child').appendChild(btnMod);
+  info.querySelector('div:last-child').appendChild(btnDel);
+  body.appendChild(info);
 
-      <div class="form-group"><label>Note</label><textarea id="editCNote">${c.note||''}</textarea></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-primary btn-sm" onclick="salvaModificaCliente('${id}')">✓ Salva</button>
-        <button class="btn btn-secondary btn-sm" onclick="annullaModificaCliente('${id}')">Annulla</button>
-      </div>
-    </div>`;
+  // Edit section
+  var edit = document.createElement('div');
+  edit.id = 'clienteEdit_'+id;
+  edit.style.display = 'none';
+  edit.innerHTML =
+    '<div class="form-group"><label>Nome *</label><input type="text" id="editCNome" value="'+c.nome+'"></div>'+
+    '<div class="form-group"><label>Cognome</label><input type="text" id="editCCognome" value="'+(c.cognome||'')+'"></div>'+
+    '<div class="form-group"><label>WhatsApp</label><input type="tel" id="editCTel" value="'+(c.telefono||'')+'"></div>'+
+    '<div class="form-group"><label>Note</label><textarea id="editCNote">'+(c.note||'')+'</textarea></div>'+
+    '<div style="display:flex;gap:8px"></div>';
+  var btnSave = document.createElement('button');
+  btnSave.className = 'btn btn-primary btn-sm';
+  btnSave.textContent = '✓ Salva';
+  btnSave.onclick = function(){ salvaModificaCliente(id); };
+  var btnCancel = document.createElement('button');
+  btnCancel.className = 'btn btn-secondary btn-sm';
+  btnCancel.textContent = 'Annulla';
+  btnCancel.onclick = function(){ annullaModificaCliente(id); };
+  edit.querySelector('div:last-child').appendChild(btnSave);
+  edit.querySelector('div:last-child').appendChild(btnCancel);
+  body.appendChild(edit);
+
   document.getElementById('clienteModal').classList.add('open');
 }
+
 
 function eliminaCliente(id){
   if(!confirm('Eliminare questa cliente e tutti i suoi appuntamenti?'))return;
@@ -1166,22 +1198,24 @@ function renderPromemoria(){
     const nome=cl?cl.nome:'Cliente';
     const tel=cl&&cl.telefono?cl.telefono.replace(/\D/g,''):'';
     const msg=generaMessaggio(nome,a.data,a.ora,a.servizio,a.durata);
-    const waLink=tel?`https://wa.me/39${tel}?text=${encodeURIComponent(msg)}`:'#';
-    return`<div class="card">
-      <div class="flex-between">
-        <div>
-          <div class="appt-name">${cl?cl.nome+' '+cl.cognome:'Cliente'}</div>
-          <div class="appt-service">${a.servizio}</div>
-          <div class="appt-time">🕐 ${a.ora}${a.durata?' ('+durataLeggibile(a.durata)+')':''}</div>
-        </div>
-      </div>
-      <div class="wa-preview">${msg}</div>
-      ${tel?`<a href="${waLink}" target="_blank" class="btn btn-whatsapp btn-full">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.543 4.064 1.497 5.779L0 24l6.389-1.677A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.846 0-3.574-.497-5.065-1.364l-.363-.215-3.766.988.988-3.667-.235-.374A9.934 9.934 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-        Manda promemoria a ${nome}
-      </a>`:
-      `<div class="info-box info-yellow">⚠️ Numero WhatsApp mancante — aggiungilo nella scheda cliente</div>`}
-    </div>`;
+    var waLink=tel?'https://wa.me/39'+tel+'?text='+encodeURIComponent(msg):'#';
+      var div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = '<div class="flex-between"><div><div class="appt-name">'+(cl?cl.nome+' '+cl.cognome:'Cliente')+'</div><div class="appt-service">'+a.servizio+'</div><div class="appt-time">'+a.ora+(a.durata?' ('+durataLeggibile(a.durata)+')':'')+'</div></div></div><div class="wa-preview">'+msg+'</div>';
+    if(tel){
+      var waBtn = document.createElement('a');
+      waBtn.href = waLink;
+      waBtn.target = '_blank';
+      waBtn.className = 'btn btn-whatsapp btn-full';
+      waBtn.innerHTML = '💬 Manda promemoria a '+(cl?cl.nome:'Cliente');
+      div.appendChild(waBtn);
+    } else {
+      var noTel = document.createElement('div');
+      noTel.className = 'info-box info-yellow';
+      noTel.textContent = 'Numero WhatsApp mancante';
+      div.appendChild(noTel);
+    }
+    return div.outerHTML;
   }).join('');
 }
 
@@ -1219,7 +1253,7 @@ function caricaOrariDisponibili(){
     });
     const isPast=data===today()&&orMin<=oraToMin(new Date().toTimeString().slice(0,5));
     const disabled=isOccupato||isPast;
-    return`<button class="orario-btn ${disabled?'occupato':''}" ${disabled?'disabled':''} onclick="selezionaOrario('${orario}',this)">${orario}</button>`;
+    return '<button class="orario-btn '+(disabled?'occupato ':'')+' '+(isSelected?'selected ':'')+' "'+(disabled?' disabled':'')+' data-ora="'+orario+'"  onclick="selezionaOrario(this.getAttribute(\"data-ora\"))"  >'+orario+'</button>';
   }).join('');
 }
 
@@ -1314,26 +1348,20 @@ function rifiutaRichiesta(id){
 // ===== STATS =====
 function renderStats(){
   const t=today();const mese=new Date().toISOString().slice(0,7);
-  document.getElementById('statsGrid').innerHTML=`
-    <div class="stat-card"><div class="stat-num">${clienti.length}</div><div class="stat-label">Clienti totali</div></div>
-    <div class="stat-card"><div class="stat-num">${appuntamenti.length}</div><div class="stat-label">Appuntamenti totali</div></div>
-    <div class="stat-card"><div class="stat-num">${appuntamenti.filter(a=>a.data===t).length}</div><div class="stat-label">Oggi</div></div>
-    <div class="stat-card"><div class="stat-num">${appuntamenti.filter(a=>a.data.startsWith(mese)).length}</div><div class="stat-label">Questo mese</div></div>`;
+  document.getElementById('statsGrid').innerHTML=
+    '<div class="stat-card"><div class="stat-num">'+clienti.length+'</div><div class="stat-label">Clienti totali</div></div>'+
+    '<div class="stat-card"><div class="stat-num">'+appuntamenti.length+'</div><div class="stat-label">Appuntamenti totali</div></div>'+
+    '<div class="stat-card"><div class="stat-num">'+appuntamenti.filter(function(a){return a.data===t;}).length+'</div><div class="stat-label">Oggi</div></div>'+
+    '<div class="stat-card"><div class="stat-num">'+appuntamenti.filter(function(a){return a.data.startsWith(mese);}).length+'</div><div class="stat-label">Questo mese</div></div>';
   const cnt={};appuntamenti.forEach(a=>{cnt[a.servizio]=(cnt[a.servizio]||0)+1;});
   const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
   const sDiv=document.getElementById('serviziStats');
   if(!sorted.length){sDiv.innerHTML='<div class="text-mid">Nessun dato ancora</div>';return;}
   const max=sorted[0][1];
-  sDiv.innerHTML=sorted.map(([s,n])=>`
-    <div style="margin-bottom:12px">
-      <div class="flex-between" style="margin-bottom:4px">
-        <span style="font-size:.83rem">${s}</span>
-        <span style="font-weight:700;color:var(--teal)">${n}</span>
-      </div>
-      <div style="background:var(--border);border-radius:10px;height:7px">
-        <div style="background:var(--grad);width:${(n/max)*100}%;height:7px;border-radius:10px"></div>
-      </div>
-    </div>`).join('');
+  sDiv.innerHTML=sorted.map(function(pair){
+    var s=pair[0],n=pair[1];
+    return '<div style="margin-bottom:12px"><div class="flex-between" style="margin-bottom:4px"><span style="font-size:.83rem">'+s+'</span><span style="font-weight:700;color:var(--teal)">'+n+'</span></div><div style="background:var(--border);border-radius:10px;height:7px"><div style="background:var(--grad);width:'+((n/max)*100)+'%;height:7px;border-radius:10px"></div></div></div>';
+  }).join('');
 }
 
 // ===== MODAL =====
