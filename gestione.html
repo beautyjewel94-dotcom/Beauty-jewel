@@ -1368,7 +1368,9 @@ function accettaRichiesta(id){
   const nuovoApp={id:Date.now().toString()+Math.random(),clienteId:cl.id,data:r.data,ora:r.ora,servizio:r.servizio,extra:r.extra||[],durata:r.durata,note:r.note};
   appuntamenti.push(nuovoApp);
   save();
-  renderAgenda(currentFilter);
+  renderCal();
+  renderPendingBox();
+  aggiornaStatoRemoto(id, 'Accettata');
   const giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
   const d=new Date(r.data);
   const giorno=giorni[d.getDay()];
@@ -1386,6 +1388,9 @@ function accettaRichiesta(id){
   alert('Prenotazione accettata e aggiunta all agenda!');
   if(confirm('Mandi il messaggio di conferma su WhatsApp a '+r.nome+'?')){
     window.open('https://wa.me/39'+tel+'?text='+encodeURIComponent(msg),'_blank');
+  }
+  if(confirm('Vuoi aggiungerlo anche a Google Calendar?')){
+    apriGoogleCalendar(nuovoApp);
   }
 }
 
