@@ -878,98 +878,6 @@ function onClienteChange(){
     document.getElementById('newCliente').value==='__nuova__'?'block':'none';
 }
 
-// ===== AGENDA =====
-function filterAgenda(filter,btn){
-  currentFilter=filter;
-  document.querySelectorAll('#page-agenda .tab').forEach(t=>t.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  renderAgenda(filter);
-}
-
-function renderAgenda(filter){
-  const list=document.getElementById('agendaList');
-  const pendingBox=document.getElementById('pendingBox');
-  let filtered=[...appuntamenti];
-  const t=today(),tm=tomorrow(),sw=startOfWeek(),ew=endOfWeek();
-  if(filter==='oggi') filtered=filtered.filter(a=>a.data===t);
-  else if(filter==='domani') filtered=filtered.filter(a=>a.data===tm);
-  else if(filter==='settimana') filtered=filtered.filter(a=>a.data>=sw&&a.data<=ew);
-  filtered.sort((a,b)=>(a.data+a.ora).localeCompare(b.data+b.ora));
-
-  // pending box
-  const pending=richiestePrenotazione.filter(r=>r.stato==='pending');
-  if(pending.length&&filter==='tutti'||filter==='oggi'||filter==='domani'||filter==='settimana'){
-    const pendingAll=richiestePrenotazione.filter(r=>r.stato==='pending');
-    if(pendingAll.length){
-      pendingBox.innerHTML=`<div class="card info-yellow" style="margin-bottom:12px">
-        ⚠️ <strong>${pendingAll.length} richiesta${pendingAll.length>1?'e':''} di prenotazione</strong> in attesa di conferma.
-        <button class="btn btn-warning btn-sm" style="margin-top:8px;display:block" onclick="filterAgenda('richieste',this)">Vedi richieste</button>
-      </div>`;
-    } else pendingBox.innerHTML='';
-  } else pendingBox.innerHTML='';
-
-  // richieste pending tab
-  if(filter==='richieste'){
-    const reqs=richiestePrenotazione.filter(r=>r.stato==='pending');
-    if(!reqs.length){list.innerHTML='<div class="empty"><div class="empty-icon">✅</div>Nessuna richiesta in attesa</div>';return;}
-    list.innerHTML=reqs.map(r=>`
-      <div class="appt-card pending">
-        <div class="appt-info">
-          <div class="appt-name">${r.nome} ${r.cognome} <span class="badge badge-pending">In attesa</span></div>
-          <div class="appt-service">${r.servizio}</div>
-          <div class="appt-time">🕐 ${formatDate(r.data)} alle ${r.ora}</div>
-          <div class="appt-time">📱 ${r.telefono}</div>
-          ${r.note?`<div class="text-mid mt-8">📝 ${r.note}</div>`:''}
-        </div>
-        <div class="appt-actions">
-          <button class="btn btn-primary btn-sm" onclick="accettaRichiesta('${r.id}')">✓</button>
-          <button class="btn btn-danger btn-sm" onclick="rifiutaRichiesta('${r.id}')">✕</button>
-        </div>
-      </div>`).join('');
-    return;
-  }
-
-  // Blocchi per questo filtro
-  let blocchiFiltrati=[...blocchi];
-  if(filter==='oggi') blocchiFiltrati=blocchiFiltrati.filter(b=>b.data===t);
-  else if(filter==='domani') blocchiFiltrati=blocchiFiltrati.filter(b=>b.data===tm);
-  else if(filter==='settimana') blocchiFiltrati=blocchiFiltrati.filter(b=>b.data>=sw&&b.data<=ew);
-
-  if(!filtered.length&&!blocchiFiltrati.length){list.innerHTML='<div class="empty"><div class="empty-icon">📭</div>Nessun appuntamento</div>';return;}
-
-  // Render blocchi
-  const blocchiHtml=blocchiFiltrati.map(b=>`
-    <div class="blocco-card">
-      <div class="appt-info">
-        <div class="blocco-label">🚫 ${b.motivo}</div>
-        <div class="appt-time">📅 ${formatDate(b.data)} ${b.tipo==='fascia'?`· ${b.dalle} → ${b.alle}`:'· Giornata intera'}</div>
-      </div>
-      <button class="btn btn-danger btn-sm" onclick="eliminaBlocco('${b.id}')">🗑</button>
-    </div>`).join('');
-  const tNow=new Date().toTimeString().slice(0,5);
-  list.innerHTML=blocchiHtml+filtered.map(a=>{
-    const cl=getCliente(a.clienteId);
-    const nome=cl?cl.nome+' '+cl.cognome:a.nomeTemp||'Cliente';
-    const isPast=a.data<t||(a.data===t&&a.ora<tNow);
-    const isToday=a.data===t;
-    const dur=a.durata?durataLeggibile(a.durata):'';
-    const fine=a.durata&&a.ora?addMinutes(a.ora,a.durata):'';
-    return`<div class="appt-card ${isPast?'past':''}">
-      <div class="appt-info">
-        <div class="appt-name">${nome}${isToday?' <span class="badge badge-today">Oggi</span>':''}</div>
-        <div class="appt-service">${a.servizio}${a.extra&&a.extra.length?' + '+a.extra.map(e=>e.nome).join(', '):''}</div>
-        <div class="appt-time">🕐 ${formatDate(a.data)} ${a.ora}${fine?' → '+fine:''}</div>
-        ${dur?`<div class="appt-duration">⏱ ${dur}</div>`:''}
-        ${a.note?`<div class="text-mid mt-8">📝 ${a.note}</div>`:''}
-      </div>
-      <div class="appt-actions">
-        <button class="btn btn-warning btn-sm" onclick="apriModifica('${a.id}')">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="eliminaAppuntamento('${a.id}')">🗑</button>
-        <button class="btn btn-secondary btn-sm" style="font-size:.65rem;padding:5px 7px" onclick='apriGoogleCalendar(${JSON.stringify(a)})' title="Aggiungi a Google Calendar">📅</button>
-      </div>
-    </div>`;
-  }).join('');
-}
 
 // ===== SALVA APPUNTAMENTO =====
 function salvaAppuntamento(){
@@ -1035,7 +943,7 @@ function eliminaAppuntamento(id){
   if(!confirm(`Cancellare l'appuntamento di ${nome} del ${formatDate(a.data)} alle ${a.ora}?`))return;
   appuntamenti=appuntamenti.filter(x=>x.id!==id);
   save();
-  renderAgenda(currentFilter);
+  renderCal();
   // Proponi di avvisare la cliente su WhatsApp
   if(cl&&cl.telefono){
     const tel=cl.telefono.replace(/\D/g,'');
@@ -1159,7 +1067,7 @@ function salvaModifica(){
   const extra=getSelectedExtra('edit');
   const durata=calcolaDurata('edit');
   appuntamenti[idx]={...appuntamenti[idx],data,ora,servizio,extra,durata,note:document.getElementById('editNote').value.trim()};
-  save();closeModal('editModal');renderAgenda(currentFilter);
+  save();closeModal('editModal');renderCal();
 }
 
 // ===== CLIENTI =====
@@ -1971,7 +1879,7 @@ function eliminaBlocco(id){
   if(!confirm('Rimuovere questo blocco?'))return;
   blocchi=blocchi.filter(b=>b.id!==id);
   save();
-  renderAgenda(currentFilter);
+  renderCal();
 }
 
 // ===== GOOGLE CALENDAR =====
