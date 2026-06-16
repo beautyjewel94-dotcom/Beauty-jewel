@@ -1079,7 +1079,11 @@ function salvaModifica(){
   if(!data||!ora||!servizio){alert('Compila tutti i campi!');return;}
   var extra=getSelectedExtra('edit');
   var durata=calcolaDurata('edit');
-  appuntamenti[idx]={...appuntamenti[idx],data,ora,servizio,extra,durata,note:document.getElementById('editNote').value.trim()};
+  var a = appuntamenti[idx];
+  a.data = data; a.ora = ora; a.servizio = servizio;
+  a.extra = extra; a.durata = durata;
+  a.note = document.getElementById('editNote').value.trim();
+  appuntamenti[idx] = a;
   save();closeModal('editModal');renderCal();
 }
 
@@ -1250,7 +1254,7 @@ function caricaOrariDisponibili(){
   pOrarioScelto=null;
   var occupati=appuntamenti.filter(function(a){ return a.data===data; });
   var grid=document.getElementById('orariGrid');
-  grid.innerHTML=ORARI_LAVORO.map(function(orario(){{
+  grid.innerHTML=ORARI_LAVORO.map(function(orario){
     var orMin=oraToMin(orario);
     var orFine=orMin+(durata||60);
     var isOccupato=occupati.some(function(a){
@@ -1296,7 +1300,7 @@ function inviaPrenotazione(){
 function resetPrenotazione(){
   document.getElementById('prenotaForm').style.display='block';
   document.getElementById('prenotaSuccess').style.display='none';
-  ['pNome','pCognome','pTel','pEmail','pNote'].forEach(function(id){ document.getElementById(id; }).value='');
+  ['pNome','pCognome','pTel','pNote'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
   document.getElementById('pServizio').value='';
   document.getElementById('pData').value='';
   document.getElementById('orariSection').style.display='none';
@@ -1323,7 +1327,7 @@ function accettaRichiesta(id){
   var giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
   var d=new Date(r.data);
   var giorno=giorni[d.getDay()];
-  var extraTxt=r.extra&&r.extra.length?' + '+r.extra.map(function(e(){e.nome).join(', '):'';
+  var extraTxt=r.extra&&r.extra.length?' + '+r.extra.map(function(e){return e.nome;}).join(', '):'';
   var fine=r.durata?addMinutes(r.ora,r.durata):'';
   var msg='Ciao '+r.nome+'! 💅\n\n'+
     'La tua prenotazione è confermata!\n\n'+
@@ -1377,23 +1381,29 @@ function closeModal(id){document.getElementById(id).classList.remove('open');}
 function apriModificaCliente(id){
   var c = getCliente(id);
   if(!c) return;
-  // Apri il modal se non è già aperto
-  var modal = document.getElementById('clienteModal');
-  if(!modal.classList.contains('open')){
-    openCliente(id);
-    // Dopo apertura mostra direttamente il form modifica
-    setTimeout(function(){
-      var info = document.getElementById('clienteInfo_'+id);
-      var edit = document.getElementById('clienteEdit_'+id);
-      if(info) info.style.display='none';
-      if(edit) edit.style.display='block';
-    }, 50);
-    return;
-  }
-  var info = document.getElementById('clienteInfo_'+id);
-  var edit = document.getElementById('clienteEdit_'+id);
-  if(info) info.style.display='none';
-  if(edit) edit.style.display='block';
+  // Apre sempre il modal con il form modifica direttamente
+  document.getElementById('modalClienteNome').textContent = c.nome+' '+c.cognome;
+  var body = document.getElementById('modalClienteBody');
+  body.innerHTML = '';
+  var edit = document.createElement('div');
+  edit.innerHTML =
+    '<div class="form-group"><label>Nome *</label><input type="text" id="editCNome" value="'+c.nome+'"></div>'+
+    '<div class="form-group"><label>Cognome</label><input type="text" id="editCCognome" value="'+(c.cognome||'')+'"></div>'+
+    '<div class="form-group"><label>WhatsApp</label><input type="tel" id="editCTel" value="'+(c.telefono||'')+'"></div>'+
+    '<div class="form-group"><label>Note</label><textarea id="editCNote">'+(c.note||'')+'</textarea></div>'+
+    '<div style="display:flex;gap:8px;margin-top:8px"></div>';
+  var btnSave = document.createElement('button');
+  btnSave.className = 'btn btn-primary btn-sm';
+  btnSave.textContent = 'Salva';
+  btnSave.onclick = (function(cid){ return function(){ salvaModificaCliente(cid); }; })(id);
+  var btnCancel = document.createElement('button');
+  btnCancel.className = 'btn btn-secondary btn-sm';
+  btnCancel.textContent = 'Annulla';
+  btnCancel.onclick = function(){ closeModal('clienteModal'); };
+  edit.querySelector('div:last-child').appendChild(btnSave);
+  edit.querySelector('div:last-child').appendChild(btnCancel);
+  body.appendChild(edit);
+  document.getElementById('clienteModal').classList.add('open');
 }
 
 function annullaModificaCliente(id){
