@@ -634,8 +634,16 @@ input:checked+.slider:before{transform:translateX(20px);}
 </div>
 
 <script>
+// Cattura errori globali e li mostra
+window.onerror = function(msg, src, line, col, err){
+  var box = document.getElementById('errorBox');
+  if(!box){ box = document.createElement('div'); box.id='errorBox'; box.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#b91c1c;color:#fff;padding:10px;font-size:.75rem;z-index:9999;'; document.body.appendChild(box); }
+  box.textContent = 'ERRORE riga '+line+': '+msg;
+  return false;
+};
+
 // ===== COSTANTI =====
-const SERVIZI = [
+var SERVIZI = [
   { nome:'Manicure con smalto classico', durata:60, extra:false },
   { nome:'Manicure senza smalto', durata:60, extra:false },
   { nome:'Semipermanente classico', durata:60, extra:true },
@@ -646,13 +654,13 @@ const SERVIZI = [
   { nome:'Copertura acrigel', durata:105, extra:true },
   { nome:'Rimozione semipermanente/gel + manicure', durata:60, extra:false },
 ];
-const EXTRA = [
+var EXTRA = [
   { nome:'Nail art', durata:15, maxDurata:30, label:'15–30 min' },
   { nome:'Babyboomer / French', durata:15, maxDurata:30, label:'15–30 min' },
   { nome:'Rimozione lavoro non mio', durata:15, maxDurata:15, label:'+15 min' },
 ];
 // Orari per giorno — mer/gio/ven 9-15, sab 9-18, lun/mar/dom chiuso
-const ORARI_PER_GIORNO = {
+var ORARI_PER_GIORNO = {
   1: [], // lunedì chiuso
   2: [], // martedì chiuso
   3: ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30'], // mer 9-15
@@ -662,11 +670,11 @@ const ORARI_PER_GIORNO = {
   0: [], // domenica solo su appuntamento diretto
 };
 // Fine turno per giorno (minuti dalla mezzanotte)
-const FINE_TURNO = { 1:0, 2:0, 3:15*60, 4:15*60, 5:15*60, 6:18*60, 0:0 };
-const ORARI_LAVORO = ORARI_PER_GIORNO; // alias
+var FINE_TURNO = { 1:0, 2:0, 3:15*60, 4:15*60, 5:15*60, 6:18*60, 0:0 };
+var ORARI_LAVORO = ORARI_PER_GIORNO; // alias
 
 // ===== DATI =====
-const DATI_GCAL = {
+var DATI_GCAL = {
   clienti:[
     {id:'c1',nome:'Loredana',cognome:'',telefono:'',email:'',note:''},
     {id:'c2',nome:'Jennyfer',cognome:'',telefono:'',email:'',note:''},
@@ -715,13 +723,13 @@ const DATI_GCAL = {
   ]
 };
 
-let clienti = JSON.parse(localStorage.getItem('bj_clienti')||'null') || DATI_GCAL.clienti;
-let appuntamenti = JSON.parse(localStorage.getItem('bj_appuntamenti')||'null') || DATI_GCAL.appuntamenti;
-let richiestePrenotazione = JSON.parse(localStorage.getItem('bj_richieste')||'[]');
-let blocchi = JSON.parse(localStorage.getItem('bj_blocchi')||'[]');
-let editingId = null;
-let currentFilter = 'oggi';
-let pOrarioScelto = null;
+var clienti = JSON.parse(localStorage.getItem('bj_clienti')||'null') || DATI_GCAL.clienti;
+var appuntamenti = JSON.parse(localStorage.getItem('bj_appuntamenti')||'null') || DATI_GCAL.appuntamenti;
+var richiestePrenotazione = JSON.parse(localStorage.getItem('bj_richieste')||'[]');
+var blocchi = JSON.parse(localStorage.getItem('bj_blocchi')||'[]');
+var editingId = null;
+var currentFilter = 'oggi';
+var pOrarioScelto = null;
 
 function save(){
   localStorage.setItem('bj_clienti',JSON.stringify(clienti));
@@ -732,32 +740,32 @@ function save(){
 
 // ===== UTILS =====
 function today(){ return new Date().toISOString().split('T')[0]; }
-function tomorrow(){ const d=new Date();d.setDate(d.getDate()+1);return d.toISOString().split('T')[0]; }
-function startOfWeek(){ const d=new Date();const day=d.getDay();const diff=d.getDate()-day+(day===0?-6:1);d.setDate(diff);return d.toISOString().split('T')[0]; }
-function endOfWeek(){ const d=new Date();const day=d.getDay();const diff=d.getDate()-day+(day===0?0:7);d.setDate(diff);return d.toISOString().split('T')[0]; }
+function tomorrow(){ var d=new Date();d.setDate(d.getDate()+1);return d.toISOString().split('T')[0]; }
+function startOfWeek(){ var d=new Date();var day=d.getDay();var diff=d.getDate()-day+(day===0?-6:1);d.setDate(diff);return d.toISOString().split('T')[0]; }
+function endOfWeek(){ var d=new Date();var day=d.getDay();var diff=d.getDate()-day+(day===0?0:7);d.setDate(diff);return d.toISOString().split('T')[0]; }
 function formatDate(str){ if(!str)return''; var p=str.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
-function getCliente(id){ return clienti.find(c=>c.id===id); }
+function getCliente(id){ return clienti.find(function(c){ return c.id===id; }); }
 function addMinutes(ora,min){
   var parts=ora.split(':');
   var tot=parseInt(parts[0])*60+parseInt(parts[1])+min;
   return String(Math.floor(tot/60)).padStart(2,'0')+':'+String(tot%60).padStart(2,'0');
 }
-function oraToMin(ora){ const[h,m]=ora.split(':').map(Number);return h*60+m; }
+function oraToMin(ora){ var[h,m]=ora.split(':').map(Number);return h*60+m; }
 function minToOra(min){ return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0'); }
 function durataLeggibile(min){ var h=Math.floor(min/60);var m=min%60;return h>0?(m>0?h+'h '+m+'min':h+'h'):m+'min'; }
-function getServizio(nome){ return SERVIZI.find(s=>s.nome===nome); }
+function getServizio(nome){ return SERVIZI.find(function(s){ return s.nome===nome; }); }
 
 // ===== HEADER =====
 function updateHeader(){
-  const d=new Date();
+  var d=new Date();
   document.getElementById('headerDate').textContent=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
 }
 updateHeader();
 
 // ===== NAV =====
 function showPage(id,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('page-'+id).classList.add('active');
   if(btn) btn.classList.add('active');
   if(id==='agenda'){ renderCal(); }
@@ -777,13 +785,13 @@ function showPage(id,btn){
 
 // ===== SERVIZI SELECT =====
 function populateServizi(ctx){
-  const ids={new:'newServizio',p:'pServizio',edit:'editServizio'};
-  const sel=document.getElementById(ids[ctx]);
+  var ids={new:'newServizio',p:'pServizio',edit:'editServizio'};
+  var sel=document.getElementById(ids[ctx]);
   if(!sel)return;
-  const val=sel.value;
+  var val=sel.value;
   sel.innerHTML='<option value="">— Scegli servizio —</option>';
-  SERVIZI.forEach(s=>{
-    const o=document.createElement('option');
+  SERVIZI.forEach(function(s){
+    var o=document.createElement('option');
     o.value=s.nome;o.textContent=s.nome+' ('+durataLeggibile(s.durata)+')';
     sel.appendChild(o);
   });
@@ -791,25 +799,25 @@ function populateServizi(ctx){
 }
 
 function onServizioChange(ctx){
-  const ids={new:{sel:'newServizio',extra:'extraSection',list:'extraList',dur:'durataInfo',dt:'durataText',ft:'fineText',ora:'newOra'},
+  var ids={new:{sel:'newServizio',extra:'extraSection',list:'extraList',dur:'durataInfo',dt:'durataText',ft:'fineText',ora:'newOra'},
              p:{sel:'pServizio',extra:'pExtraSection',list:'pExtraList',dur:'pDurataInfo',dt:'pDurataText',ft:null,ora:null},
              edit:{sel:'editServizio',extra:'editExtraSection',list:'editExtraList',dur:'editDurataInfo',dt:'editDurataText',ft:'editFineText',ora:'editOra'}};
-  const id=ids[ctx];
-  const sNome=document.getElementById(id.sel).value;
-  const serv=getServizio(sNome);
+  var id=ids[ctx];
+  var sNome=document.getElementById(id.sel).value;
+  var serv=getServizio(sNome);
   document.getElementById(id.extra).style.display=serv&&serv.extra?'block':'none';
   if(serv&&serv.extra) renderExtra(ctx,id.list);
   aggiornaFineStimata(ctx);
   if(ctx==='p') caricaOrariDisponibili();
   // Per nuovo appuntamento: aggiorna orari se la data è già selezionata
   if(ctx==='new'){
-    const data=document.getElementById('newData').value;
+    var data=document.getElementById('newData').value;
     if(data) onDataChange();
   }
 }
 
 function renderExtra(ctx,listId){
-  const list=document.getElementById(listId);
+  var list=document.getElementById(listId);
   var container = document.getElementById(listId);
   container.innerHTML = '';
   EXTRA.forEach(function(e,i){
@@ -834,45 +842,45 @@ function toggleExtra(ctx,i){
 }
 
 function getSelectedExtra(ctx){
-  return EXTRA.map((e,i)=>{
+  return EXTRA.map(function(e,i){
     var chk=document.getElementById('chk_'+ctx+'_'+i);
     return chk&&chk.checked?e:null;
   }).filter(Boolean);
 }
 
 function calcolaDurata(ctx){
-  const ids={new:'newServizio',p:'pServizio',edit:'editServizio'};
-  const sNome=document.getElementById(ids[ctx]).value;
-  const serv=getServizio(sNome);
+  var ids={new:'newServizio',p:'pServizio',edit:'editServizio'};
+  var sNome=document.getElementById(ids[ctx]).value;
+  var serv=getServizio(sNome);
   if(!serv)return 0;
-  let tot=serv.durata;
-  getSelectedExtra(ctx).forEach(e=>tot+=e.durata);
+  var tot=serv.durata;
+  getSelectedExtra(ctx).forEach(function(e){ tot+=e.durata; });
   return tot;
 }
 
 function aggiornaFineStimata(ctx){
-  const ids={new:{dur:'durataInfo',dt:'durataText',ft:'fineText',ora:'newOra'},
+  var ids={new:{dur:'durataInfo',dt:'durataText',ft:'fineText',ora:'newOra'},
              edit:{dur:'editDurataInfo',dt:'editDurataText',ft:'editFineText',ora:'editOra'},
              p:{dur:'pDurataInfo',dt:'pDurataText',ft:null,ora:null}};
-  const id=ids[ctx];
-  const min=calcolaDurata(ctx);
+  var id=ids[ctx];
+  var min=calcolaDurata(ctx);
   if(!min){document.getElementById(id.dur).style.display='none';return;}
   document.getElementById(id.dur).style.display='block';
   document.getElementById(id.dt).textContent=durataLeggibile(min);
   if(id.ft&&id.ora){
-    const ora=document.getElementById(id.ora).value;
+    var ora=document.getElementById(id.ora).value;
     if(ora) document.getElementById(id.ft).textContent=addMinutes(ora,min);
   }
 }
 
 // ===== CLIENTE SELECT =====
 function populateClienteSelect(){
-  const sel=document.getElementById('newCliente');
+  var sel=document.getElementById('newCliente');
   if(!sel)return;
-  const val=sel.value;
+  var val=sel.value;
   sel.innerHTML='<option value="">— Seleziona cliente —</option><option value="__nuova__">+ Aggiungi nuova cliente</option>';
-  [...clienti].sort((a,b)=>a.nome.localeCompare(b.nome)).forEach(c=>{
-    const o=document.createElement('option');
+  [...clienti].sort(function(a,b){ return a.nome.localeCompare(b.nome); }).forEach(function(c){
+    var o=document.createElement('option');
     o.value=c.id;o.textContent=c.nome+' '+c.cognome;
     sel.appendChild(o);
   });
@@ -887,26 +895,26 @@ function onClienteChange(){
 
 // ===== SALVA APPUNTAMENTO =====
 function salvaAppuntamento(){
-  const clienteId=document.getElementById('newCliente').value;
-  const data=document.getElementById('newData').value;
-  const ora=document.getElementById('newOra').value;
-  const servizio=document.getElementById('newServizio').value;
+  var clienteId=document.getElementById('newCliente').value;
+  var data=document.getElementById('newData').value;
+  var ora=document.getElementById('newOra').value;
+  var servizio=document.getElementById('newServizio').value;
   if(!data||!ora||!servizio){alert('Compila data, ora e servizio!');return;}
-  let cid=clienteId;
+  var cid=clienteId;
   if(clienteId==='__nuova__'){
-    const nome=document.getElementById('newNome').value.trim();
-    const tel=document.getElementById('newTelefono').value.trim();
+    var nome=document.getElementById('newNome').value.trim();
+    var tel=document.getElementById('newTelefono').value.trim();
     if(!nome){alert('Inserisci almeno il nome della cliente!');return;}
-    const nuova={id:Date.now().toString(),nome,cognome:document.getElementById('newCognome').value.trim(),
+    var nuova={id:Date.now().toString(),nome,cognome:document.getElementById('newCognome').value.trim(),
       telefono:tel,email:'',note:''};
     clienti.push(nuova);cid=nuova.id;
   } else if(!clienteId){alert('Seleziona una cliente!');return;}
-  const extra=getSelectedExtra('new');
-  const durata=calcolaDurata('new');
+  var extra=getSelectedExtra('new');
+  var durata=calcolaDurata('new');
   appuntamenti.push({id:Date.now().toString()+Math.random(),clienteId:cid,data,ora,servizio,extra,durata,note:document.getElementById('newNote').value.trim()});
   save();
   // reset
-  ['newCliente','newOra','newServizio','newNote','newNome','newCognome','newTelefono'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['newCliente','newOra','newServizio','newNote','newNome','newCognome','newTelefono'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('nuovaClienteFields').style.display='none';
   document.getElementById('extraSection').style.display='none';
   document.getElementById('durataInfo').style.display='none';
@@ -942,17 +950,17 @@ function salvaAppuntamento(){
 }
 
 function eliminaAppuntamento(id){
-  const a=appuntamenti.find(x=>x.id===id);
+  var a=appuntamenti.find(function(x){ return x.id===id; });
   if(!a)return;
-  const cl=getCliente(a.clienteId);
-  const nome=cl?cl.nome:'la cliente';
+  var cl=getCliente(a.clienteId);
+  var nome=cl?cl.nome:'la cliente';
   if(!confirm('Cancellare l appuntamento di '+nome+' del '+formatDate(a.data)+' alle '+a.ora+'?'))return;
-  appuntamenti=appuntamenti.filter(x=>x.id!==id);
+  appuntamenti=appuntamenti.filter(function(x){ return x.id!==id; });
   save();
   renderCal();
   // Proponi di avvisare la cliente su WhatsApp
   if(cl&&cl.telefono){
-    const tel=cl.telefono.replace(/\D/g,'');
+    var tel=cl.telefono.replace(/\D/g,'');
     var msg='Ciao '+cl.nome+'!\nPurtroppo devo cancellare il tuo appuntamento del '+formatDate(a.data)+' alle '+a.ora+'.\nContattami per fissarne uno nuovo!\n- Katia, Beauty Jewel';
     if(confirm('Vuoi avvisare la cliente su WhatsApp?')){
       window.open('https://wa.me/39'+tel+'?text='+encodeURIComponent(msg),'_blank');
@@ -961,17 +969,17 @@ function eliminaAppuntamento(id){
 }
 
 function onDataChange(){
-  const data = document.getElementById('newData').value;
+  var data = document.getElementById('newData').value;
   if (!data) return;
   document.getElementById('newOra').value = '';
-  const d = new Date(data);
-  const dow = d.getDay();
-  const orari = ORARI_PER_GIORNO[dow] || [];
-  const durata = calcolaDurata('new') || 60;
-  const fineTurno = FINE_TURNO[dow] || 0;
-  const oraGroup = document.getElementById('newOraGroup');
-  const chiusoMsg = document.getElementById('newGiornoChiusoMsg');
-  const grid = document.getElementById('newOrariGrid');
+  var d = new Date(data);
+  var dow = d.getDay();
+  var orari = ORARI_PER_GIORNO[dow] || [];
+  var durata = calcolaDurata('new') || 60;
+  var fineTurno = FINE_TURNO[dow] || 0;
+  var oraGroup = document.getElementById('newOraGroup');
+  var chiusoMsg = document.getElementById('newGiornoChiusoMsg');
+  var grid = document.getElementById('newOrariGrid');
 
   if (!orari.length) {
     oraGroup.style.display = 'none';
@@ -981,10 +989,10 @@ function onDataChange(){
   chiusoMsg.style.display = 'none';
   oraGroup.style.display = 'block';
 
-  const occupati = appuntamenti.filter(a => a.data === data);
-  const blocchiGiorno = blocchi.filter(b => b.data === data);
-  const giornoBloccato = blocchiGiorno.some(b => b.tipo === 'giorno');
-  const tNow = new Date().toTimeString().slice(0,5);
+  var occupati = appuntamenti.filter(function(a){ return a.data === data; });
+  var blocchiGiorno = blocchi.filter(function(b){ return b.data === data; });
+  var giornoBloccato = blocchiGiorno.some(function(b){ return b.tipo === 'giorno'; });
+  var tNow = new Date().toTimeString().slice(0,5);
 
   if(giornoBloccato){
     grid.innerHTML = '<div class="info-box info-yellow" style="grid-column:1/-1">Hai bloccato questa giornata. Puoi inserire un orario manuale:</div>';
@@ -994,21 +1002,21 @@ function onDataChange(){
 
   grid.innerHTML = '';
   orari.forEach(function(orario){
-    const orMin = oraToMin(orario);
-    const orFine = orMin + durata;
-    const sforaT = fineTurno && orFine > fineTurno;
-    const isOcc = occupati.some(function(a){
-      const aS = oraToMin(a.ora); const aF = aS + (a.durata || 60);
+    var orMin = oraToMin(orario);
+    var orFine = orMin + durata;
+    var sforaT = fineTurno && orFine > fineTurno;
+    var isOcc = occupati.some(function(a){
+      var aS = oraToMin(a.ora); var aF = aS + (a.durata || 60);
       return orMin < aF && orFine > aS;
     });
-    const isBlocco = blocchiGiorno.some(function(b){
+    var isBlocco = blocchiGiorno.some(function(b){
       if(b.tipo==='giorno') return true;
-      const bS=oraToMin(b.dalle); const bF=oraToMin(b.alle);
+      var bS=oraToMin(b.dalle); var bF=oraToMin(b.alle);
       return orMin < bF && orFine > bS;
     });
-    const isPast = data === today() && orario <= tNow;
-    const disabled = sforaT || isOcc || isBlocco || isPast;
-    const label = isBlocco ? 'Bloccato' : isOcc ? 'Occupato' : sforaT ? 'Sfora' : orario;
+    var isPast = data === today() && orario <= tNow;
+    var disabled = sforaT || isOcc || isBlocco || isPast;
+    var label = isBlocco ? 'Bloccato' : isOcc ? 'Occupato' : sforaT ? 'Sfora' : orario;
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'orario-btn' + (disabled ? ' occupato' : '');
@@ -1031,32 +1039,31 @@ function selezionaOraNew(ora){
 
 // ===== MODIFICA APPUNTAMENTO =====
 function apriModifica(id){
-  const a=appuntamenti.find(x=>x.id===id);
-  if(!a)return;
-  editingId=id;
+  var a = appuntamenti.find(function(x){ return x.id===id; });
+  if(!a) return;
+  editingId = id;
   populateServizi('edit');
-  document.getElementById('editData').value=a.data;
-  document.getElementById('editOra').value=a.ora;
-  document.getElementById('editServizio').value=a.servizio;
-  document.getElementById('editNote').value=a.note||'';
-  const serv=getServizio(a.servizio);
-  if(serv&&serv.extra){
-    document.getElementById('editExtraSection').style.display='block';
+  document.getElementById('editData').value = a.data;
+  document.getElementById('editOra').value = a.ora;
+  document.getElementById('editServizio').value = a.servizio;
+  document.getElementById('editNote').value = a.note||'';
+  var serv = getServizio(a.servizio);
+  if(serv && serv.extra){
+    document.getElementById('editExtraSection').style.display = 'block';
     renderExtra('edit','editExtraList');
-    // ripristina extra selezionati
-    setTimeout(()=>{
-      if(a.extra) a.extra.forEach(ex=>{
-        const i=EXTRA.findIndex(e=>e.nome===ex.nome);
+    setTimeout(function(){
+      if(a.extra) a.extra.forEach(function(ex){
+        var i = EXTRA.findIndex(function(e){ return e.nome===ex.nome; });
         if(i>=0){
-          var chk=document.getElementById('chk_edit_'+i);
-          var item=document.getElementById('extra_edit_'+i);
-          if(chk){chk.checked=true;item.classList.add('selected');}
+          var chk = document.getElementById('chk_edit_'+i);
+          var item = document.getElementById('extra_edit_'+i);
+          if(chk){ chk.checked=true; item.classList.add('selected'); }
         }
       });
       aggiornaFineStimata('edit');
-    },50);
+    }, 50);
   } else {
-    document.getElementById('editExtraSection').style.display='none';
+    document.getElementById('editExtraSection').style.display = 'none';
   }
   aggiornaFineStimata('edit');
   document.getElementById('editModal').classList.add('open');
@@ -1064,14 +1071,14 @@ function apriModifica(id){
 
 function salvaModifica(){
   if(!editingId)return;
-  const idx=appuntamenti.findIndex(a=>a.id===editingId);
+  var idx=appuntamenti.findIndex(function(a){ return a.id===editingId; });
   if(idx<0)return;
-  const data=document.getElementById('editData').value;
-  const ora=document.getElementById('editOra').value;
-  const servizio=document.getElementById('editServizio').value;
+  var data=document.getElementById('editData').value;
+  var ora=document.getElementById('editOra').value;
+  var servizio=document.getElementById('editServizio').value;
   if(!data||!ora||!servizio){alert('Compila tutti i campi!');return;}
-  const extra=getSelectedExtra('edit');
-  const durata=calcolaDurata('edit');
+  var extra=getSelectedExtra('edit');
+  var durata=calcolaDurata('edit');
   appuntamenti[idx]={...appuntamenti[idx],data,ora,servizio,extra,durata,note:document.getElementById('editNote').value.trim()};
   save();closeModal('editModal');renderCal();
 }
@@ -1096,17 +1103,17 @@ function renderClienti(){
               '<span class="badge badge-teal">'+nApp+' visita'+(nApp!==1?'e':'a')+'</span>');
     infoDiv.style.flex = '1';
     infoDiv.style.cursor = 'pointer';
-    infoDiv.onclick = function(){ openCliente(c.id); };
+    infoDiv.onclick = (function(cid){ return function(){ openCliente(cid); }; })(c.id);
     var btnsDiv = document.createElement('div');
     btnsDiv.style.cssText = 'display:flex;gap:6px;align-items:center';
     var btnEdit = document.createElement('button');
     btnEdit.className = 'btn btn-secondary btn-sm';
     btnEdit.textContent = '✏️';
-    btnEdit.onclick = function(){ apriModificaCliente(c.id); };
+    btnEdit.onclick = (function(cid){ return function(){ apriModificaCliente(cid); }; })(c.id);
     var btnDel = document.createElement('button');
     btnDel.className = 'btn btn-danger btn-sm';
     btnDel.textContent = '🗑';
-    btnDel.onclick = function(){ eliminaCliente(c.id); };
+    btnDel.onclick = (function(cid){ return function(){ eliminaCliente(cid); }; })(c.id);
     btnsDiv.appendChild(btnEdit);
     btnsDiv.appendChild(btnDel);
     div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:10px';
@@ -1182,22 +1189,22 @@ function openCliente(id){
 
 function eliminaCliente(id){
   if(!confirm('Eliminare questa cliente e tutti i suoi appuntamenti?'))return;
-  clienti=clienti.filter(c=>c.id!==id);
-  appuntamenti=appuntamenti.filter(a=>a.clienteId!==id);
+  clienti=clienti.filter(function(c){ return c.id!==id; });
+  appuntamenti=appuntamenti.filter(function(a){ return a.clienteId!==id; });
   save();closeModal('clienteModal');renderClienti();
 }
 
 // ===== PROMEMORIA =====
 function renderPromemoria(){
-  const tm=tomorrow();
-  const list=document.getElementById('promemoriList');
-  const domani=appuntamenti.filter(a=>a.data===tm).sort((a,b)=>a.ora.localeCompare(b.ora));
+  var tm=tomorrow();
+  var list=document.getElementById('promemoriList');
+  var domani=appuntamenti.filter(function(a){ return a.data===tm; }).sort(function(a,b){ return a.ora.localeCompare(b.ora); });
   if(!domani.length){list.innerHTML='<div class="empty"><div class="empty-icon">🌙</div>Nessun appuntamento domani 💅</div>';return;}
-  list.innerHTML=domani.map(a=>{
-    const cl=getCliente(a.clienteId);
-    const nome=cl?cl.nome:'Cliente';
-    const tel=cl&&cl.telefono?cl.telefono.replace(/\D/g,''):'';
-    const msg=generaMessaggio(nome,a.data,a.ora,a.servizio,a.durata);
+  list.innerHTML=domani.map(function(a){
+    var cl=getCliente(a.clienteId);
+    var nome=cl?cl.nome:'Cliente';
+    var tel=cl&&cl.telefono?cl.telefono.replace(/\D/g,''):'';
+    var msg=generaMessaggio(nome,a.data,a.ora,a.servizio,a.durata);
     var waLink=tel?'https://wa.me/39'+tel+'?text='+encodeURIComponent(msg):'#';
       var div = document.createElement('div');
     div.className = 'card';
@@ -1235,47 +1242,47 @@ function generaMessaggio(nome,data,ora,servizio,durata){
 
 // ===== PRENOTAZIONE CLIENTE =====
 function caricaOrariDisponibili(){
-  const data=document.getElementById('pData').value;
-  const durata=calcolaDurata('p');
-  const sec=document.getElementById('orariSection');
+  var data=document.getElementById('pData').value;
+  var durata=calcolaDurata('p');
+  var sec=document.getElementById('orariSection');
   if(!data){sec.style.display='none';return;}
   sec.style.display='block';
   pOrarioScelto=null;
-  const occupati=appuntamenti.filter(a=>a.data===data);
-  const grid=document.getElementById('orariGrid');
-  grid.innerHTML=ORARI_LAVORO.map(orario=>{
-    const orMin=oraToMin(orario);
-    const orFine=orMin+(durata||60);
-    const isOccupato=occupati.some(a=>{
-      const aStart=oraToMin(a.ora);
-      const aFine=aStart+(a.durata||60);
+  var occupati=appuntamenti.filter(function(a){ return a.data===data; });
+  var grid=document.getElementById('orariGrid');
+  grid.innerHTML=ORARI_LAVORO.map(function(orario(){{
+    var orMin=oraToMin(orario);
+    var orFine=orMin+(durata||60);
+    var isOccupato=occupati.some(function(a){
+      var aStart=oraToMin(a.ora);
+      var aFine=aStart+(a.durata||60);
       return orMin<aFine&&orFine>aStart;
     });
-    const isPast=data===today()&&orMin<=oraToMin(new Date().toTimeString().slice(0,5));
-    const disabled=isOccupato||isPast;
+    var isPast=data===today()&&orMin<=oraToMin(new Date().toTimeString().slice(0,5));
+    var disabled=isOccupato||isPast;
     return '<button class="orario-btn '+(disabled?'occupato ':'')+' '+(isSelected?'selected ':'')+' "'+(disabled?' disabled':'')+' data-ora="'+orario+'"  onclick="selezionaOrario(this.getAttribute(\"data-ora\"))"  >'+orario+'</button>';
   }).join('');
 }
 
 function selezionaOrario(ora,btn){
-  document.querySelectorAll('.orario-btn').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.orario-btn').forEach(function(b){ b.classList.remove('selected'); });
   btn.classList.add('selected');
   pOrarioScelto=ora;
   aggiornaFineStimata('p');
 }
 
 function inviaPrenotazione(){
-  const nome=document.getElementById('pNome').value.trim();
-  const cognome=document.getElementById('pCognome').value.trim();
-  const tel=document.getElementById('pTel').value.trim();
-  const email=document.getElementById('pEmail').value.trim();
-  const servizio=document.getElementById('pServizio').value;
-  const data=document.getElementById('pData').value;
+  var nome=document.getElementById('pNome').value.trim();
+  var cognome=document.getElementById('pCognome').value.trim();
+  var tel=document.getElementById('pTel').value.trim();
+  var email=document.getElementById('pEmail').value.trim();
+  var servizio=document.getElementById('pServizio').value;
+  var data=document.getElementById('pData').value;
   if(!nome||!cognome||!tel||!servizio||!data||!pOrarioScelto){
     alert('Compila tutti i campi obbligatori e scegli un orario!');return;
   }
-  const extra=getSelectedExtra('p');
-  const durata=calcolaDurata('p');
+  var extra=getSelectedExtra('p');
+  var durata=calcolaDurata('p');
   richiestePrenotazione.push({
     id:Date.now().toString(),stato:'pending',
     nome,cognome,telefono:tel,email,servizio,extra,durata,
@@ -1289,7 +1296,7 @@ function inviaPrenotazione(){
 function resetPrenotazione(){
   document.getElementById('prenotaForm').style.display='block';
   document.getElementById('prenotaSuccess').style.display='none';
-  ['pNome','pCognome','pTel','pEmail','pNote'].forEach(id=>document.getElementById(id).value='');
+  ['pNome','pCognome','pTel','pEmail','pNote'].forEach(function(id){ document.getElementById(id; }).value='');
   document.getElementById('pServizio').value='';
   document.getElementById('pData').value='';
   document.getElementById('orariSection').style.display='none';
@@ -1299,26 +1306,26 @@ function resetPrenotazione(){
 }
 
 function accettaRichiesta(id){
-  const r=richiestePrenotazione.find(x=>x.id===id);
+  var r=richiestePrenotazione.find(function(x){ return x.id===id; });
   if(!r)return;
   r.stato='accettata';
-  let cl=clienti.find(c=>c.telefono===r.telefono);
+  var cl=clienti.find(function(c){ return c.telefono===r.telefono; });
   if(!cl){
     cl={id:Date.now().toString(),nome:r.nome,cognome:r.cognome,telefono:r.telefono,email:'',note:''};
     clienti.push(cl);
   }
-  const nuovoApp={id:Date.now().toString()+Math.random(),clienteId:cl.id,data:r.data,ora:r.ora,servizio:r.servizio,extra:r.extra||[],durata:r.durata,note:r.note};
+  var nuovoApp={id:Date.now().toString()+Math.random(),clienteId:cl.id,data:r.data,ora:r.ora,servizio:r.servizio,extra:r.extra||[],durata:r.durata,note:r.note};
   appuntamenti.push(nuovoApp);
   save();
   renderCal();
   renderPendingBox();
   aggiornaStatoRemoto(id, 'Accettata');
-  const giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
-  const d=new Date(r.data);
-  const giorno=giorni[d.getDay()];
-  const extraTxt=r.extra&&r.extra.length?' + '+r.extra.map(e=>e.nome).join(', '):'';
-  const fine=r.durata?addMinutes(r.ora,r.durata):'';
-  const msg='Ciao '+r.nome+'! 💅\n\n'+
+  var giorni=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+  var d=new Date(r.data);
+  var giorno=giorni[d.getDay()];
+  var extraTxt=r.extra&&r.extra.length?' + '+r.extra.map(function(e(){e.nome).join(', '):'';
+  var fine=r.durata?addMinutes(r.ora,r.durata):'';
+  var msg='Ciao '+r.nome+'! 💅\n\n'+
     'La tua prenotazione è confermata!\n\n'+
     '📅 '+giorno+' '+formatDate(r.data)+'\n'+
     '🕐 Ore '+r.ora+'\n'+
@@ -1326,7 +1333,7 @@ function accettaRichiesta(id){
     (r.note?'\n📝 '+r.note:'')+'\n\n'+
     'Nel caso non potessi venire, ti chiedo gentilmente di avvisarmi il prima possibile così posso gestire l\'agenda. 🙏\n\n'+
     'A presto! 🌸\n— Katia, Beauty Jewel';
-  const tel=r.telefono.replace(/[^0-9]/g,'');
+  var tel=r.telefono.replace(/[^0-9]/g,'');
   alert('Prenotazione accettata e aggiunta all agenda!');
   if(confirm('Mandi il messaggio di conferma su WhatsApp a '+r.nome+'?')){
     window.open('https://wa.me/39'+tel+'?text='+encodeURIComponent(msg),'_blank');
@@ -1347,17 +1354,17 @@ function rifiutaRichiesta(id){
 
 // ===== STATS =====
 function renderStats(){
-  const t=today();const mese=new Date().toISOString().slice(0,7);
+  var t=today();var mese=new Date().toISOString().slice(0,7);
   document.getElementById('statsGrid').innerHTML=
     '<div class="stat-card"><div class="stat-num">'+clienti.length+'</div><div class="stat-label">Clienti totali</div></div>'+
     '<div class="stat-card"><div class="stat-num">'+appuntamenti.length+'</div><div class="stat-label">Appuntamenti totali</div></div>'+
     '<div class="stat-card"><div class="stat-num">'+appuntamenti.filter(function(a){return a.data===t;}).length+'</div><div class="stat-label">Oggi</div></div>'+
     '<div class="stat-card"><div class="stat-num">'+appuntamenti.filter(function(a){return a.data.startsWith(mese);}).length+'</div><div class="stat-label">Questo mese</div></div>';
-  const cnt={};appuntamenti.forEach(a=>{cnt[a.servizio]=(cnt[a.servizio]||0)+1;});
-  const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
-  const sDiv=document.getElementById('serviziStats');
+  var cnt={};appuntamenti.forEach(function(a){cnt[a.servizio]=(cnt[a.servizio]||0)+1;});
+  var sorted=Object.entries(cnt).sort(function(a,b){ return b[1]-a[1]; });
+  var sDiv=document.getElementById('serviziStats');
   if(!sorted.length){sDiv.innerHTML='<div class="text-mid">Nessun dato ancora</div>';return;}
-  const max=sorted[0][1];
+  var max=sorted[0][1];
   sDiv.innerHTML=sorted.map(function(pair){
     var s=pair[0],n=pair[1];
     return '<div style="margin-bottom:12px"><div class="flex-between" style="margin-bottom:4px"><span style="font-size:.83rem">'+s+'</span><span style="font-weight:700;color:var(--teal)">'+n+'</span></div><div style="background:var(--border);border-radius:10px;height:7px"><div style="background:var(--grad);width:'+((n/max)*100)+'%;height:7px;border-radius:10px"></div></div></div>';
@@ -1368,8 +1375,25 @@ function renderStats(){
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 
 function apriModificaCliente(id){
-  document.getElementById('clienteInfo_'+id).style.display='none';
-  document.getElementById('clienteEdit_'+id).style.display='block';
+  var c = getCliente(id);
+  if(!c) return;
+  // Apri il modal se non è già aperto
+  var modal = document.getElementById('clienteModal');
+  if(!modal.classList.contains('open')){
+    openCliente(id);
+    // Dopo apertura mostra direttamente il form modifica
+    setTimeout(function(){
+      var info = document.getElementById('clienteInfo_'+id);
+      var edit = document.getElementById('clienteEdit_'+id);
+      if(info) info.style.display='none';
+      if(edit) edit.style.display='block';
+    }, 50);
+    return;
+  }
+  var info = document.getElementById('clienteInfo_'+id);
+  var edit = document.getElementById('clienteEdit_'+id);
+  if(info) info.style.display='none';
+  if(edit) edit.style.display='block';
 }
 
 function annullaModificaCliente(id){
@@ -1378,9 +1402,9 @@ function annullaModificaCliente(id){
 }
 
 function salvaModificaCliente(id){
-  const nome=document.getElementById('editCNome').value.trim();
+  var nome=document.getElementById('editCNome').value.trim();
   if(!nome){alert('Il nome è obbligatorio!');return;}
-  const idx=clienti.findIndex(c=>c.id===id);
+  var idx=clienti.findIndex(function(c){ return c.id===id; });
   if(idx<0)return;
   clienti[idx].nome=nome;
   clienti[idx].cognome=document.getElementById('editCCognome').value.trim();
@@ -1392,27 +1416,27 @@ function salvaModificaCliente(id){
   renderClienti();
   populateClienteSelect();
 }
-document.querySelectorAll('.modal-overlay').forEach(m=>{
+document.querySelectorAll('.modal-overlay').forEach(function(m){
   m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 });
 
 // ===== LOGIN =====
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQlq063E-gGRS9Id2GP1IND0FgkCu_1OYdOCEMZiOnEb1RpeO7ogU36BrFNp6082DSMA/exec';
-const NICK = 'BeautyjewelDJ';
-const PASS = 'DaelBJ1511*';
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQlq063E-gGRS9Id2GP1IND0FgkCu_1OYdOCEMZiOnEb1RpeO7ogU36BrFNp6082DSMA/exec';
+var NICK = 'BeautyjewelDJ';
+var PASS = 'DaelBJ1511*';
 
 function checkLogin(){
   // localStorage mantiene la sessione finché non esci manualmente
-  const ok = localStorage.getItem('bj_auth') === 'ok';
+  var ok = localStorage.getItem('bj_auth') === 'ok';
   if(ok){
     document.getElementById('loginOverlay').style.display = 'none';
   }
 }
 
 function doLogin(){
-  const nick = document.getElementById('loginNick').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-  const err = document.getElementById('loginError');
+  var nick = document.getElementById('loginNick').value.trim();
+  var pass = document.getElementById('loginPass').value.trim();
+  var err = document.getElementById('loginError');
   if(nick === NICK && pass === PASS){
     localStorage.setItem('bj_auth','ok');
     document.getElementById('loginOverlay').style.display = 'none';
@@ -1878,11 +1902,11 @@ function onBloccoTipoChange(){
 }
 
 function salvaBlocco(){
-  const data=document.getElementById('bloccoData').value;
-  const tipo=document.getElementById('bloccoTipo').value;
-  const motivo=document.getElementById('bloccoMotivo').value.trim()||'Non disponibile';
+  var data=document.getElementById('bloccoData').value;
+  var tipo=document.getElementById('bloccoTipo').value;
+  var motivo=document.getElementById('bloccoMotivo').value.trim()||'Non disponibile';
   if(!data){alert('Scegli una data!');return;}
-  let dalle='00:00', alle='23:59';
+  var dalle='00:00', alle='23:59';
   if(tipo==='fascia'){
     dalle=document.getElementById('bDalle').value;
     alle=document.getElementById('bAlle').value;
@@ -1901,7 +1925,7 @@ function salvaBlocco(){
 
 function eliminaBlocco(id){
   if(!confirm('Rimuovere questo blocco?'))return;
-  blocchi=blocchi.filter(b=>b.id!==id);
+  blocchi=blocchi.filter(function(b){ return b.id!==id; });
   save();
   renderCal();
 }
